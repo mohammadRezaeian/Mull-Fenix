@@ -1,13 +1,13 @@
-diff -r 0e15e2edd460 -r c45f2c445215 build.gradle
---- a/build.gradle	Mon Oct 21 17:55:50 2024 +0000
-+++ b/build.gradle	Mon Oct 28 08:32:50 2024 -0400
+diff -r c3bba5162c98 build.gradle
+--- a/build.gradle	Mon Apr 21 16:33:21 2025 +0000
++++ b/build.gradle	Wed Apr 23 09:00:07 2025 +0000
 @@ -4,14 +4,9 @@
  
  buildscript {
      repositories {
 -        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
 -            maven {
--                url repository
+-                url = repository
 -                if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
 -                    allowInsecureProtocol = true
 -                }
@@ -18,14 +18,14 @@ diff -r 0e15e2edd460 -r c45f2c445215 build.gradle
 +        google()
      }
  
-     ext {
-@@ -144,14 +139,9 @@
+     dependencies {
+@@ -128,14 +123,9 @@
      }
  
      repositories {
 -        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
 -            maven {
--                url repository
+-                url = repository
 -                if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
 -                    allowInsecureProtocol = true
 -                }
@@ -37,16 +37,16 @@ diff -r 0e15e2edd460 -r c45f2c445215 build.gradle
      }
  
      // Use the semanticdb-javac and semanticdb-kotlinc plugins to generate semanticdb files for Searchfox
-diff -r 0e15e2edd460 -r c45f2c445215 mobile/android/android-components/build.gradle
---- a/mobile/android/android-components/build.gradle	Mon Oct 21 17:55:50 2024 +0000
-+++ b/mobile/android/android-components/build.gradle	Mon Oct 28 08:32:50 2024 -0400
+diff -r c3bba5162c98 mobile/android/android-components/build.gradle
+--- a/mobile/android/android-components/build.gradle	Mon Apr 21 16:33:21 2025 +0000
++++ b/mobile/android/android-components/build.gradle	Wed Apr 23 09:00:07 2025 +0000
 @@ -9,14 +9,9 @@
  
  buildscript {
      repositories {
 -        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
 -            maven {
--                url repository
+-                url = repository
 -                if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
 -                    allowInsecureProtocol = true
 -                }
@@ -58,13 +58,13 @@ diff -r 0e15e2edd460 -r c45f2c445215 mobile/android/android-components/build.gra
      }
  
      dependencies {
-@@ -40,14 +35,9 @@
+@@ -33,18 +28,10 @@
  
  allprojects {
      repositories {
 -        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
 -            maven {
--                url repository
+-                url = repository
 -                if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
 -                    allowInsecureProtocol = true
 -                }
@@ -74,18 +74,22 @@ diff -r 0e15e2edd460 -r c45f2c445215 mobile/android/android-components/build.gra
 +        maven { url "https://plugins.gradle.org/m2/" }
 +        google()
  
-         maven {
-             url "${gradle.mozconfig.topobjdir}/gradle/maven"
-diff -r 0e15e2edd460 -r c45f2c445215 mobile/android/android-components/components/browser/engine-gecko/build.gradle
---- a/mobile/android/android-components/components/browser/engine-gecko/build.gradle	Mon Oct 21 17:55:50 2024 +0000
-+++ b/mobile/android/android-components/components/browser/engine-gecko/build.gradle	Mon Oct 28 08:32:50 2024 -0400
+-        maven {
+-            url = "${gradle.mozconfig.topobjdir}/gradle/maven"
+-        }
+     }
+ 
+     // Enable Kotlin warnings as errors for all modules
+diff -r c3bba5162c98 mobile/android/android-components/components/browser/engine-gecko/build.gradle
+--- a/mobile/android/android-components/components/browser/engine-gecko/build.gradle	Mon Apr 21 16:33:21 2025 +0000
++++ b/mobile/android/android-components/components/browser/engine-gecko/build.gradle	Wed Apr 23 09:00:07 2025 +0000
 @@ -4,14 +4,9 @@
  
  buildscript {
      repositories {
 -        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
 -            maven {
--                url repository
+-                url = repository
 -                if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
 -                    allowInsecureProtocol = true
 -                }
@@ -97,16 +101,16 @@ diff -r 0e15e2edd460 -r c45f2c445215 mobile/android/android-components/component
      }
  
      dependencies {
-diff -r 0e15e2edd460 -r c45f2c445215 mobile/android/android-components/components/lib/crash/build.gradle
---- a/mobile/android/android-components/components/lib/crash/build.gradle	Mon Oct 21 17:55:50 2024 +0000
-+++ b/mobile/android/android-components/components/lib/crash/build.gradle	Mon Oct 28 08:32:50 2024 -0400
+diff -r c3bba5162c98 mobile/android/android-components/components/lib/crash/build.gradle
+--- a/mobile/android/android-components/components/lib/crash/build.gradle	Mon Apr 21 16:33:21 2025 +0000
++++ b/mobile/android/android-components/components/lib/crash/build.gradle	Wed Apr 23 09:00:07 2025 +0000
 @@ -4,14 +4,9 @@
  
  buildscript {
      repositories {
 -        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
 -            maven {
--                url repository
+-                url = repository
 -                if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
 -                    allowInsecureProtocol = true
 -                }
@@ -118,16 +122,16 @@ diff -r 0e15e2edd460 -r c45f2c445215 mobile/android/android-components/component
      }
  
      dependencies {
-diff -r 0e15e2edd460 -r c45f2c445215 mobile/android/android-components/components/service/nimbus/build.gradle
---- a/mobile/android/android-components/components/service/nimbus/build.gradle	Mon Oct 21 17:55:50 2024 +0000
-+++ b/mobile/android/android-components/components/service/nimbus/build.gradle	Mon Oct 28 08:32:50 2024 -0400
+diff -r c3bba5162c98 mobile/android/android-components/components/service/mars/build.gradle
+--- a/mobile/android/android-components/components/service/mars/build.gradle	Mon Apr 21 16:33:21 2025 +0000
++++ b/mobile/android/android-components/components/service/mars/build.gradle	Wed Apr 23 09:00:07 2025 +0000
 @@ -4,14 +4,9 @@
  
  buildscript {
      repositories {
 -        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
 -            maven {
--                url repository
+-                url = repository
 -                if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
 -                    allowInsecureProtocol = true
 -                }
@@ -139,16 +143,58 @@ diff -r 0e15e2edd460 -r c45f2c445215 mobile/android/android-components/component
      }
  
      dependencies {
-diff -r 0e15e2edd460 -r c45f2c445215 mobile/android/android-components/components/support/remotesettings/build.gradle
---- a/mobile/android/android-components/components/support/remotesettings/build.gradle	Mon Oct 21 17:55:50 2024 +0000
-+++ b/mobile/android/android-components/components/support/remotesettings/build.gradle	Mon Oct 28 08:32:50 2024 -0400
+diff -r c3bba5162c98 mobile/android/android-components/components/service/nimbus/build.gradle
+--- a/mobile/android/android-components/components/service/nimbus/build.gradle	Mon Apr 21 16:33:21 2025 +0000
++++ b/mobile/android/android-components/components/service/nimbus/build.gradle	Wed Apr 23 09:00:07 2025 +0000
+@@ -4,14 +4,9 @@
+ 
+ buildscript {
+     repositories {
+-        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
+-            maven {
+-                url = repository
+-                if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
+-                    allowInsecureProtocol = true
+-                }
+-            }
+-        }
++        mavenLocal()
++        maven { url "https://plugins.gradle.org/m2/" }
++        google()
+     }
+ 
+     dependencies {
+diff -r c3bba5162c98 mobile/android/android-components/components/service/pocket/build.gradle
+--- a/mobile/android/android-components/components/service/pocket/build.gradle	Mon Apr 21 16:33:21 2025 +0000
++++ b/mobile/android/android-components/components/service/pocket/build.gradle	Wed Apr 23 09:00:07 2025 +0000
+@@ -4,14 +4,9 @@
+ 
+ buildscript {
+     repositories {
+-        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
+-            maven {
+-                url = repository
+-                if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
+-                    allowInsecureProtocol = true
+-                }
+-            }
+-        }
++        mavenLocal()
++        maven { url "https://plugins.gradle.org/m2/" }
++        google()
+     }
+ 
+     dependencies {
+diff -r c3bba5162c98 mobile/android/android-components/components/support/remotesettings/build.gradle
+--- a/mobile/android/android-components/components/support/remotesettings/build.gradle	Mon Apr 21 16:33:21 2025 +0000
++++ b/mobile/android/android-components/components/support/remotesettings/build.gradle	Wed Apr 23 09:00:07 2025 +0000
 @@ -3,14 +3,9 @@
   * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
  buildscript {
      repositories {
 -        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
 -            maven {
--                url repository
+-                url = repository
 -                if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
 -                    allowInsecureProtocol = true
 -                }
@@ -159,17 +205,17 @@ diff -r 0e15e2edd460 -r c45f2c445215 mobile/android/android-components/component
 +        google()
      }
      dependencies {
-         classpath  ComponentsDependencies.plugin_serialization
-diff -r 0e15e2edd460 -r c45f2c445215 mobile/android/android-components/plugins/config/build.gradle
---- a/mobile/android/android-components/plugins/config/build.gradle	Mon Oct 21 17:55:50 2024 +0000
-+++ b/mobile/android/android-components/plugins/config/build.gradle	Mon Oct 28 08:32:50 2024 -0400
-@@ -7,14 +7,9 @@
- }
+         classpath  libs.plugin.serialization
+diff -r c3bba5162c98 mobile/android/android-components/plugins/config/build.gradle
+--- a/mobile/android/android-components/plugins/config/build.gradle	Mon Apr 21 16:33:21 2025 +0000
++++ b/mobile/android/android-components/plugins/config/build.gradle	Wed Apr 23 09:00:07 2025 +0000
+@@ -9,14 +9,9 @@
+ buildDir = "${gradle.mozconfig.topobjdir}/gradle/build/mobile/android/android-components/plugins/config"
  
  repositories {
 -    gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
 -        maven {
--            url repository
+-            url = repository
 -            if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
 -                allowInsecureProtocol = true
 -            }
@@ -181,16 +227,16 @@ diff -r 0e15e2edd460 -r c45f2c445215 mobile/android/android-components/plugins/c
  }
  
  gradlePlugin {
-diff -r 0e15e2edd460 -r c45f2c445215 mobile/android/android-components/plugins/config/settings.gradle
---- a/mobile/android/android-components/plugins/config/settings.gradle	Mon Oct 21 17:55:50 2024 +0000
-+++ b/mobile/android/android-components/plugins/config/settings.gradle	Mon Oct 28 08:32:50 2024 -0400
-@@ -9,13 +9,8 @@
+diff -r c3bba5162c98 mobile/android/android-components/plugins/config/settings.gradle
+--- a/mobile/android/android-components/plugins/config/settings.gradle	Mon Apr 21 16:33:21 2025 +0000
++++ b/mobile/android/android-components/plugins/config/settings.gradle	Wed Apr 23 09:00:07 2025 +0000
+@@ -11,14 +11,9 @@
      }
  
      repositories {
 -        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
 -            maven {
--                url repository
+-                url = repository
 -                if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
 -                    allowInsecureProtocol = true
 -                }
@@ -201,37 +247,38 @@ diff -r 0e15e2edd460 -r c45f2c445215 mobile/android/android-components/plugins/c
 +        google()
      }
  }
-diff -r 0e15e2edd460 -r c45f2c445215 mobile/android/android-components/plugins/dependencies/build.gradle
---- a/mobile/android/android-components/plugins/dependencies/build.gradle	Mon Oct 21 17:55:50 2024 +0000
-+++ b/mobile/android/android-components/plugins/dependencies/build.gradle	Mon Oct 28 08:32:50 2024 -0400
-@@ -7,14 +7,9 @@
- }
+ 
+diff -r c3bba5162c98 mobile/android/android-components/plugins/dependencies/build.gradle
+--- a/mobile/android/android-components/plugins/dependencies/build.gradle	Mon Apr 21 16:33:21 2025 +0000
++++ b/mobile/android/android-components/plugins/dependencies/build.gradle	Wed Apr 23 09:00:07 2025 +0000
+@@ -9,14 +9,9 @@
+ buildDir = "${gradle.mozconfig.topobjdir}/gradle/build/mobile/android/android-components/plugins/dependencies"
  
  repositories {
 -        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
 -            maven {
--                url repository
+-                url = repository
 -                if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
 -                    allowInsecureProtocol = true
 -                }
 -            }
 -        }
-+        mavenLocal()
-+        maven { url "https://plugins.gradle.org/m2/" }
-+        google()
++    mavenLocal()
++    maven { url "https://plugins.gradle.org/m2/" }
++    google()
  }
  
  gradlePlugin {
-diff -r 0e15e2edd460 -r c45f2c445215 mobile/android/android-components/plugins/dependencies/settings.gradle
---- a/mobile/android/android-components/plugins/dependencies/settings.gradle	Mon Oct 21 17:55:50 2024 +0000
-+++ b/mobile/android/android-components/plugins/dependencies/settings.gradle	Mon Oct 28 08:32:50 2024 -0400
-@@ -9,13 +9,8 @@
+diff -r c3bba5162c98 mobile/android/android-components/plugins/dependencies/settings.gradle
+--- a/mobile/android/android-components/plugins/dependencies/settings.gradle	Mon Apr 21 16:33:21 2025 +0000
++++ b/mobile/android/android-components/plugins/dependencies/settings.gradle	Wed Apr 23 09:00:07 2025 +0000
+@@ -11,14 +11,9 @@
      }
  
      repositories {
 -        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
 -            maven {
--                url repository
+-                url = repository
 -                if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
 -                    allowInsecureProtocol = true
 -                }
@@ -242,37 +289,38 @@ diff -r 0e15e2edd460 -r c45f2c445215 mobile/android/android-components/plugins/d
 +        google()
      }
  }
-diff -r 0e15e2edd460 -r c45f2c445215 mobile/android/android-components/plugins/publicsuffixlist/build.gradle
---- a/mobile/android/android-components/plugins/publicsuffixlist/build.gradle	Mon Oct 21 17:55:50 2024 +0000
-+++ b/mobile/android/android-components/plugins/publicsuffixlist/build.gradle	Mon Oct 28 08:32:50 2024 -0400
-@@ -7,14 +7,9 @@
- }
+ 
+diff -r c3bba5162c98 mobile/android/android-components/plugins/publicsuffixlist/build.gradle
+--- a/mobile/android/android-components/plugins/publicsuffixlist/build.gradle	Mon Apr 21 16:33:21 2025 +0000
++++ b/mobile/android/android-components/plugins/publicsuffixlist/build.gradle	Wed Apr 23 09:00:07 2025 +0000
+@@ -9,14 +9,9 @@
+ buildDir = "${gradle.mozconfig.topobjdir}/gradle/build/mobile/android/android-components/plugins/publicsuffixlist"
  
  repositories {
 -        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
 -            maven {
--                url repository
+-                url = repository
 -                if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
 -                    allowInsecureProtocol = true
 -                }
 -            }
 -        }
-+        mavenLocal()
-+        maven { url "https://plugins.gradle.org/m2/" }
-+        google()
++    mavenLocal()
++    maven { url "https://plugins.gradle.org/m2/" }
++    google()
  }
  
  dependencies {
-diff -r 0e15e2edd460 -r c45f2c445215 mobile/android/android-components/plugins/publicsuffixlist/settings.gradle
---- a/mobile/android/android-components/plugins/publicsuffixlist/settings.gradle	Mon Oct 21 17:55:50 2024 +0000
-+++ b/mobile/android/android-components/plugins/publicsuffixlist/settings.gradle	Mon Oct 28 08:32:50 2024 -0400
-@@ -10,14 +10,9 @@
+diff -r c3bba5162c98 mobile/android/android-components/plugins/publicsuffixlist/settings.gradle
+--- a/mobile/android/android-components/plugins/publicsuffixlist/settings.gradle	Mon Apr 21 16:33:21 2025 +0000
++++ b/mobile/android/android-components/plugins/publicsuffixlist/settings.gradle	Wed Apr 23 09:00:07 2025 +0000
+@@ -12,14 +12,9 @@
      }
  
      repositories {
 -        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
 -            maven {
--                url repository
+-                url = repository
 -                if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
 -                    allowInsecureProtocol = true
 -                }
@@ -284,16 +332,16 @@ diff -r 0e15e2edd460 -r c45f2c445215 mobile/android/android-components/plugins/p
      }
  
      includeBuild("../dependencies")
-diff -r 0e15e2edd460 -r c45f2c445215 mobile/android/android-components/samples/glean/build.gradle
---- a/mobile/android/android-components/samples/glean/build.gradle	Mon Oct 21 17:55:50 2024 +0000
-+++ b/mobile/android/android-components/samples/glean/build.gradle	Mon Oct 28 08:32:50 2024 -0400
+diff -r c3bba5162c98 mobile/android/android-components/samples/glean/build.gradle
+--- a/mobile/android/android-components/samples/glean/build.gradle	Mon Apr 21 16:33:21 2025 +0000
++++ b/mobile/android/android-components/samples/glean/build.gradle	Wed Apr 23 09:00:07 2025 +0000
 @@ -4,14 +4,9 @@
  
  buildscript {
      repositories {
 -        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
 -            maven {
--                url repository
+-                url = repository
 -                if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
 -                    allowInsecureProtocol = true
 -                }
@@ -304,17 +352,17 @@ diff -r 0e15e2edd460 -r c45f2c445215 mobile/android/android-components/samples/g
 +        google()
  
          dependencies {
-             classpath "org.mozilla.telemetry:glean-gradle-plugin:${Versions.mozilla_glean}"
-diff -r 0e15e2edd460 -r c45f2c445215 mobile/android/android-components/samples/glean/samples-glean-library/build.gradle
---- a/mobile/android/android-components/samples/glean/samples-glean-library/build.gradle	Mon Oct 21 17:55:50 2024 +0000
-+++ b/mobile/android/android-components/samples/glean/samples-glean-library/build.gradle	Mon Oct 28 08:32:50 2024 -0400
+             classpath "org.mozilla.telemetry:glean-gradle-plugin:${libs.versions.mozilla.glean.get()}"
+diff -r c3bba5162c98 mobile/android/android-components/samples/glean/samples-glean-library/build.gradle
+--- a/mobile/android/android-components/samples/glean/samples-glean-library/build.gradle	Mon Apr 21 16:33:21 2025 +0000
++++ b/mobile/android/android-components/samples/glean/samples-glean-library/build.gradle	Wed Apr 23 09:00:07 2025 +0000
 @@ -4,14 +4,9 @@
  
  buildscript {
      repositories {
 -        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
 -            maven {
--                url repository
+-                url = repository
 -                if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
 -                    allowInsecureProtocol = true
 -                }
@@ -325,17 +373,17 @@ diff -r 0e15e2edd460 -r c45f2c445215 mobile/android/android-components/samples/g
 +        google()
  
          dependencies {
-             classpath "org.mozilla.telemetry:glean-gradle-plugin:${Versions.mozilla_glean}"
-diff -r 0e15e2edd460 -r c45f2c445215 mobile/android/android-components/settings.gradle
---- a/mobile/android/android-components/settings.gradle	Mon Oct 21 17:55:50 2024 +0000
-+++ b/mobile/android/android-components/settings.gradle	Mon Oct 28 08:32:50 2024 -0400
-@@ -8,14 +8,9 @@
+             classpath "org.mozilla.telemetry:glean-gradle-plugin:${libs.versions.mozilla.glean.get()}"
+diff -r c3bba5162c98 mobile/android/android-components/settings.gradle
+--- a/mobile/android/android-components/settings.gradle	Mon Apr 21 16:33:21 2025 +0000
++++ b/mobile/android/android-components/settings.gradle	Wed Apr 23 09:00:07 2025 +0000
+@@ -10,14 +10,9 @@
      }
  
      repositories {
 -        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
 -            maven {
--                url repository
+-                url = repository
 -                if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
 -                    allowInsecureProtocol = true
 -                }
@@ -347,16 +395,16 @@ diff -r 0e15e2edd460 -r c45f2c445215 mobile/android/android-components/settings.
      }
  
      includeBuild("plugins/dependencies")
-diff -r 0e15e2edd460 -r c45f2c445215 mobile/android/fenix/app/build.gradle
---- a/mobile/android/fenix/app/build.gradle	Mon Oct 21 17:55:50 2024 +0000
-+++ b/mobile/android/fenix/app/build.gradle	Mon Oct 28 08:32:50 2024 -0400
+diff -r c3bba5162c98 mobile/android/fenix/app/build.gradle
+--- a/mobile/android/fenix/app/build.gradle	Mon Apr 21 16:33:21 2025 +0000
++++ b/mobile/android/fenix/app/build.gradle	Wed Apr 23 09:00:07 2025 +0000
 @@ -3,14 +3,9 @@
  
  buildscript {
      repositories {
 -        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
 -            maven {
--                url repository
+-                url = repository
 -                if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
 -                    allowInsecureProtocol = true
 -                }
@@ -368,16 +416,16 @@ diff -r 0e15e2edd460 -r c45f2c445215 mobile/android/fenix/app/build.gradle
      }
  
      dependencies {
-diff -r 0e15e2edd460 -r c45f2c445215 mobile/android/fenix/build.gradle
---- a/mobile/android/fenix/build.gradle	Mon Oct 21 17:55:50 2024 +0000
-+++ b/mobile/android/fenix/build.gradle	Mon Oct 28 08:32:50 2024 -0400
+diff -r c3bba5162c98 mobile/android/fenix/build.gradle
+--- a/mobile/android/fenix/build.gradle	Mon Apr 21 16:33:21 2025 +0000
++++ b/mobile/android/fenix/build.gradle	Wed Apr 23 09:00:07 2025 +0000
 @@ -10,14 +10,9 @@
  buildscript {
      // This logic is duplicated in the allprojects block: I don't know how to fix that.
      repositories {
 -        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
 -            maven {
--                url repository
+-                url = repository
 -                if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
 -                    allowInsecureProtocol = true
 -                }
@@ -389,13 +437,13 @@ diff -r 0e15e2edd460 -r c45f2c445215 mobile/android/fenix/build.gradle
      }
  
      dependencies {
-@@ -51,14 +46,9 @@
+@@ -45,18 +40,10 @@
  allprojects {
      // This logic is duplicated in the buildscript block: I don't know how to fix that.
      repositories {
 -        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
 -            maven {
--                url repository
+-                url = repository
 -                if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
 -                    allowInsecureProtocol = true
 -                }
@@ -405,60 +453,43 @@ diff -r 0e15e2edd460 -r c45f2c445215 mobile/android/fenix/build.gradle
 +        maven { url "https://plugins.gradle.org/m2/" }
 +        google()
  
-         maven {
-             url "${gradle.mozconfig.topobjdir}/gradle/maven"
-diff -r 0e15e2edd460 -r c45f2c445215 mobile/android/fenix/mozilla-lint-rules/build.gradle
---- a/mobile/android/fenix/mozilla-lint-rules/build.gradle	Mon Oct 21 17:55:50 2024 +0000
-+++ b/mobile/android/fenix/mozilla-lint-rules/build.gradle	Mon Oct 28 08:32:50 2024 -0400
-@@ -6,14 +6,9 @@
- apply plugin: 'kotlin'
+-        maven {
+-            url = "${gradle.mozconfig.topobjdir}/gradle/maven"
+-        }
+     }
+ 
+     tasks.withType(KotlinCompile).configureEach {
+diff -r c3bba5162c98 mobile/android/fenix/plugins/apksize/build.gradle
+--- a/mobile/android/fenix/plugins/apksize/build.gradle	Mon Apr 21 16:33:21 2025 +0000
++++ b/mobile/android/fenix/plugins/apksize/build.gradle	Wed Apr 23 09:00:07 2025 +0000
+@@ -9,14 +9,9 @@
+ buildDir = "${gradle.mozconfig.topobjdir}/gradle/build/mobile/android/fenix/plugins/apksize"
  
  repositories {
 -        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
 -            maven {
--                url repository
+-                url = repository
 -                if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
 -                    allowInsecureProtocol = true
 -                }
 -            }
 -        }
-+        mavenLocal()
-+        maven { url "https://plugins.gradle.org/m2/" }
-+        google()
++    mavenLocal()
++    maven { url "https://plugins.gradle.org/m2/" }
++    google()
  }
  
  dependencies {
-diff -r 0e15e2edd460 -r c45f2c445215 mobile/android/fenix/plugins/apksize/build.gradle
---- a/mobile/android/fenix/plugins/apksize/build.gradle	Mon Oct 21 17:55:50 2024 +0000
-+++ b/mobile/android/fenix/plugins/apksize/build.gradle	Mon Oct 28 08:32:50 2024 -0400
-@@ -7,14 +7,9 @@
- }
- 
- repositories {
--        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
--            maven {
--                url repository
--                if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
--                    allowInsecureProtocol = true
--                }
--            }
--        }
-+        mavenLocal()
-+        maven { url "https://plugins.gradle.org/m2/" }
-+        google()
- }
- 
- dependencies {
-diff -r 0e15e2edd460 -r c45f2c445215 mobile/android/fenix/plugins/apksize/settings.gradle
---- a/mobile/android/fenix/plugins/apksize/settings.gradle	Mon Oct 21 17:55:50 2024 +0000
-+++ b/mobile/android/fenix/plugins/apksize/settings.gradle	Mon Oct 28 08:32:50 2024 -0400
-@@ -9,13 +9,8 @@
+diff -r c3bba5162c98 mobile/android/fenix/plugins/apksize/settings.gradle
+--- a/mobile/android/fenix/plugins/apksize/settings.gradle	Mon Apr 21 16:33:21 2025 +0000
++++ b/mobile/android/fenix/plugins/apksize/settings.gradle	Wed Apr 23 09:00:07 2025 +0000
+@@ -11,14 +11,9 @@
      }
  
      repositories {
 -        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
 -            maven {
--                url repository
+-                url = repository
 -                if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
 -                    allowInsecureProtocol = true
 -                }
@@ -469,179 +500,38 @@ diff -r 0e15e2edd460 -r c45f2c445215 mobile/android/fenix/plugins/apksize/settin
 +        google()
      }
  }
-diff -r 0e15e2edd460 -r c45f2c445215 mobile/android/fenix/plugins/fenixdependencies/build.gradle
---- a/mobile/android/fenix/plugins/fenixdependencies/build.gradle	Mon Oct 21 17:55:50 2024 +0000
-+++ b/mobile/android/fenix/plugins/fenixdependencies/build.gradle	Mon Oct 28 08:32:50 2024 -0400
-@@ -7,14 +7,9 @@
- }
  
- repositories {
--        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
--            maven {
--                url repository
--                if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
--                    allowInsecureProtocol = true
--                }
--            }
--        }
-+        mavenLocal()
-+        maven { url "https://plugins.gradle.org/m2/" }
-+        google()
- }
- 
- gradlePlugin {
-diff -r 0e15e2edd460 -r c45f2c445215 mobile/android/fenix/plugins/fenixdependencies/settings.gradle
---- a/mobile/android/fenix/plugins/fenixdependencies/settings.gradle	Mon Oct 21 17:55:50 2024 +0000
-+++ b/mobile/android/fenix/plugins/fenixdependencies/settings.gradle	Mon Oct 28 08:32:50 2024 -0400
-@@ -9,13 +9,8 @@
-     }
- 
-     repositories {
--        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
--            maven {
--                url repository
--                if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
--                    allowInsecureProtocol = true
--                }
--            }
--        }
-+        mavenLocal()
-+        maven { url "https://plugins.gradle.org/m2/" }
-+        google()
-     }
- }
-diff -r 0e15e2edd460 -r c45f2c445215 mobile/android/fenix/settings.gradle
---- a/mobile/android/fenix/settings.gradle	Mon Oct 21 17:55:50 2024 +0000
-+++ b/mobile/android/fenix/settings.gradle	Mon Oct 28 08:32:50 2024 -0400
-@@ -8,14 +8,9 @@
-     }
- 
-     repositories {
--        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
--            maven {
--                url repository
--                if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
--                    allowInsecureProtocol = true
--                }
--            }
--        }
-+        mavenLocal()
-+        maven { url "https://plugins.gradle.org/m2/" }
-+        google()
-     }
- 
-     includeBuild("../android-components/plugins/publicsuffixlist")
-diff -r 0e15e2edd460 -r c45f2c445215 mobile/android/focus-android/build.gradle
---- a/mobile/android/focus-android/build.gradle	Mon Oct 21 17:55:50 2024 +0000
-+++ b/mobile/android/focus-android/build.gradle	Mon Oct 28 08:32:50 2024 -0400
-@@ -7,14 +7,9 @@
- 
- buildscript {
-     repositories {
--        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
--            maven {
--                url repository
--                if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
--                    allowInsecureProtocol = true
--                }
--            }
--        }
-+        mavenLocal()
-+        maven { url "https://plugins.gradle.org/m2/" }
-+        google()
-     }
- 
-     dependencies {
-@@ -82,14 +77,9 @@
- 
- allprojects {
-     repositories {
--        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
--            maven {
--                url repository
--                if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
--                    allowInsecureProtocol = true
--                }
--            }
--        }
-+        mavenLocal()
-+        maven { url "https://plugins.gradle.org/m2/" }
-+        google()
- 
-         maven {
-             url "${gradle.mozconfig.topobjdir}/gradle/maven"
-diff -r 0e15e2edd460 -r c45f2c445215 mobile/android/focus-android/plugins/focusdependencies/build.gradle
---- a/mobile/android/focus-android/plugins/focusdependencies/build.gradle	Mon Oct 21 17:55:50 2024 +0000
-+++ b/mobile/android/focus-android/plugins/focusdependencies/build.gradle	Mon Oct 28 08:32:50 2024 -0400
-@@ -7,14 +7,9 @@
- }
- 
- repositories {
--        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
--            maven {
--                url repository
--                if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
--                    allowInsecureProtocol = true
--                }
--            }
--        }
-+        mavenLocal()
-+        maven { url "https://plugins.gradle.org/m2/" }
-+        google()
- }
- 
- gradlePlugin {
-diff -r 0e15e2edd460 -r c45f2c445215 mobile/android/focus-android/plugins/focusdependencies/settings.gradle
---- a/mobile/android/focus-android/plugins/focusdependencies/settings.gradle	Mon Oct 21 17:55:50 2024 +0000
-+++ b/mobile/android/focus-android/plugins/focusdependencies/settings.gradle	Mon Oct 28 08:32:50 2024 -0400
-@@ -9,13 +9,8 @@
-     }
- 
-     repositories {
--        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
--            maven {
--                url repository
--                if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
--                    allowInsecureProtocol = true
--                }
--            }
--        }
-+        mavenLocal()
-+        maven { url "https://plugins.gradle.org/m2/" }
-+        google()
-     }
- }
-diff -r 0e15e2edd460 -r c45f2c445215 mobile/android/focus-android/settings.gradle
---- a/mobile/android/focus-android/settings.gradle	Mon Oct 21 17:55:50 2024 +0000
-+++ b/mobile/android/focus-android/settings.gradle	Mon Oct 28 08:32:50 2024 -0400
-@@ -8,14 +8,9 @@
-     }
- 
-     repositories {
--        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
--            maven {
--                url repository
--                if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
--                    allowInsecureProtocol = true
--                }
--            }
--        }
-+        mavenLocal()
-+        maven { url "https://plugins.gradle.org/m2/" }
-+        google()
-     }
- 
-     includeBuild("../android-components/plugins/publicsuffixlist")
-diff -r 0e15e2edd460 -r c45f2c445215 mobile/android/shared-settings.gradle
---- a/mobile/android/shared-settings.gradle	Mon Oct 21 17:55:50 2024 +0000
-+++ b/mobile/android/shared-settings.gradle	Mon Oct 28 08:32:50 2024 -0400
+diff -r c3bba5162c98 mobile/android/fenix/settings.gradle
+--- a/mobile/android/fenix/settings.gradle	Mon Apr 21 16:33:21 2025 +0000
++++ b/mobile/android/fenix/settings.gradle	Wed Apr 23 09:00:07 2025 +0000
 @@ -10,14 +10,9 @@
      }
  
      repositories {
 -        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
 -            maven {
--                url repository
+-                url = repository
+-                if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
+-                    allowInsecureProtocol = true
+-                }
+-            }
+-        }
++        mavenLocal()
++        maven { url "https://plugins.gradle.org/m2/" }
++        google()
+     }
+ 
+     includeBuild("../android-components/plugins/publicsuffixlist")
+diff -r c3bba5162c98 mobile/android/focus-android/build.gradle
+--- a/mobile/android/focus-android/build.gradle	Mon Apr 21 16:33:21 2025 +0000
++++ b/mobile/android/focus-android/build.gradle	Wed Apr 23 09:00:07 2025 +0000
+@@ -7,14 +7,9 @@
+ 
+ buildscript {
+     repositories {
+-        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
+-            maven {
+-                url = repository
 -                if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
 -                    allowInsecureProtocol = true
 -                }
@@ -653,16 +543,80 @@ diff -r 0e15e2edd460 -r c45f2c445215 mobile/android/shared-settings.gradle
      }
  
      dependencies {
-diff -r 0e15e2edd460 -r c45f2c445215 settings.gradle
---- a/settings.gradle	Mon Oct 21 17:55:50 2024 +0000
-+++ b/settings.gradle	Mon Oct 28 08:32:50 2024 -0400
-@@ -4,14 +4,9 @@
+@@ -76,18 +71,10 @@
+ 
+ allprojects {
+     repositories {
+-        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
+-            maven {
+-                url = repository
+-                if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
+-                    allowInsecureProtocol = true
+-                }
+-            }
+-        }
++        mavenLocal()
++        maven { url "https://plugins.gradle.org/m2/" }
++        google()
+ 
+-        maven {
+-            url = "${gradle.mozconfig.topobjdir}/gradle/maven"
+-        }
+     }
+ 
+     tasks.withType(KotlinCompile).configureEach {
+diff -r c3bba5162c98 mobile/android/focus-android/settings.gradle
+--- a/mobile/android/focus-android/settings.gradle	Mon Apr 21 16:33:21 2025 +0000
++++ b/mobile/android/focus-android/settings.gradle	Wed Apr 23 09:00:07 2025 +0000
+@@ -10,14 +10,9 @@
      }
  
      repositories {
 -        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
 -            maven {
--                url repository
+-                url = repository
+-                if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
+-                    allowInsecureProtocol = true
+-                }
+-            }
+-        }
++        mavenLocal()
++        maven { url "https://plugins.gradle.org/m2/" }
++        google()
+     }
+ 
+     includeBuild("../android-components/plugins/publicsuffixlist")
+diff -r c3bba5162c98 mobile/android/shared-settings.gradle
+--- a/mobile/android/shared-settings.gradle	Mon Apr 21 16:33:21 2025 +0000
++++ b/mobile/android/shared-settings.gradle	Wed Apr 23 09:00:07 2025 +0000
+@@ -12,14 +12,9 @@
+     }
+ 
+     repositories {
+-        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
+-            maven {
+-                url = repository
+-                if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
+-                    allowInsecureProtocol = true
+-                }
+-            }
+-        }
++        mavenLocal()
++        maven { url "https://plugins.gradle.org/m2/" }
++        google()
+     }
+ 
+     dependencies {
+diff -r c3bba5162c98 settings.gradle
+--- a/settings.gradle	Mon Apr 21 16:33:21 2025 +0000
++++ b/settings.gradle	Wed Apr 23 09:00:07 2025 +0000
+@@ -9,14 +9,9 @@
+     }
+ 
+     repositories {
+-        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
+-            maven {
+-                url = repository
 -                if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
 -                    allowInsecureProtocol = true
 -                }

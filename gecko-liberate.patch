@@ -1,19 +1,21 @@
-diff -r 0a6479ef0332 mobile/android/geckoview/build.gradle
---- a/mobile/android/geckoview/build.gradle	Mon Nov 18 12:58:35 2024 +0000
-+++ b/mobile/android/geckoview/build.gradle	Tue Nov 19 09:11:18 2024 +0000
-@@ -216,7 +216,7 @@
-     implementation ComponentsDependencies.androidx_collection
-     implementation ComponentsDependencies.androidx_core
- 
--    implementation ComponentsDependencies.play_services_fido
-+    implementation "org.microg.gms:play-services-fido:0.3.4.240913"
+diff --git a/mobile/android/geckoview/build.gradle b/mobile/android/geckoview/build.gradle
+index c47f4cfe6e47..b7b3d68701fc 100644
+--- a/mobile/android/geckoview/build.gradle
++++ b/mobile/android/geckoview/build.gradle
+@@ -220,7 +220,7 @@ dependencies {
+     implementation libs.androidx.core
+     implementation libs.androidx.lifecycle.common
+     implementation libs.androidx.lifecycle.process
+-    implementation libs.play.services.fido
++    implementation "org.microg.gms:play-services-fido:0.3.10.250932"
      implementation "org.yaml:snakeyaml:2.2"
-     implementation 'androidx.core:core:1.12.0'
  
-diff -r 0a6479ef0332 mobile/android/geckoview/src/main/java/org/mozilla/geckoview/WebAuthnTokenManager.java
---- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/WebAuthnTokenManager.java	Mon Nov 18 12:58:35 2024 +0000
-+++ b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/WebAuthnTokenManager.java	Tue Nov 19 09:11:18 2024 +0000
-@@ -193,27 +193,14 @@
+     if (mozconfig.substs.MOZ_ANDROID_HLS_SUPPORT) {
+diff --git a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/WebAuthnTokenManager.java b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/WebAuthnTokenManager.java
+index 2eea4c6af176..7cf1f3a3e1ff 100644
+--- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/WebAuthnTokenManager.java
++++ b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/WebAuthnTokenManager.java
+@@ -195,27 +195,14 @@ import org.mozilla.gecko.util.WebAuthnUtils;
  
        final Task<PendingIntent> intentTask;
  
@@ -49,7 +51,7 @@ diff -r 0a6479ef0332 mobile/android/geckoview/src/main/java/org/mozilla/geckovie
  
        intentTask.addOnSuccessListener(
            pendingIntent -> {
-@@ -411,19 +398,12 @@
+@@ -428,19 +415,12 @@ import org.mozilla.gecko.util.WebAuthnUtils;
                .build();
  
        final Task<PendingIntent> intentTask;
@@ -58,23 +60,23 @@ diff -r 0a6479ef0332 mobile/android/geckoview/src/main/java/org/mozilla/geckovie
 -      if (BuildConfig.MOZILLA_OFFICIAL) {
 -        final Fido2PrivilegedApiClient fidoClient =
 -            Fido.getFido2PrivilegedApiClient(GeckoAppShell.getApplicationContext());
+-
+-        intentTask = fidoClient.getSignPendingIntent(browserOptions);
+-      } else {
+-        final Fido2ApiClient fidoClient =
+-            Fido.getFido2ApiClient(GeckoAppShell.getApplicationContext());
 +      // See the makeCredential method for documentation about the FIDO2 API and
 +      // microG.
 +      final Fido2PrivilegedApiClient fidoClient =
 +          Fido.getFido2PrivilegedApiClient(GeckoAppShell.getApplicationContext());
  
--        intentTask = fidoClient.getSignPendingIntent(browserOptions);
--      } else {
--        final Fido2ApiClient fidoClient =
--            Fido.getFido2ApiClient(GeckoAppShell.getApplicationContext());
--
 -        intentTask = fidoClient.getSignPendingIntent(requestOptions);
 -      }
 +      intentTask = fidoClient.getSignPendingIntent(browserOptions);
  
        intentTask.addOnSuccessListener(
            pendingIntent -> {
-@@ -557,15 +537,9 @@
+@@ -574,15 +554,9 @@ import org.mozilla.gecko.util.WebAuthnUtils;
    @WrapForJNI(calledFrom = "gecko")
    private static GeckoResult<Boolean> webAuthnIsUserVerifyingPlatformAuthenticatorAvailable() {
      final Task<Boolean> task;

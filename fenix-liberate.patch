@@ -1,184 +1,116 @@
-diff -r 0a6479ef0332 mobile/android/android-components/.buildconfig.yml
---- a/mobile/android/android-components/.buildconfig.yml	Mon Nov 18 12:58:35 2024 +0000
-+++ b/mobile/android/android-components/.buildconfig.yml	Tue Nov 19 10:17:20 2024 +0300
-@@ -1566,16 +1566,6 @@
-     - support-base
-     - support-test
-     - tooling-lint
--  lib-push-firebase:
+diff --git a/gradle/libs.versions.toml b/gradle/libs.versions.toml
+index 52e9a741e922..4631f58c521d 100644
+--- a/gradle/libs.versions.toml
++++ b/gradle/libs.versions.toml
+@@ -50,14 +50,9 @@ work = "2.10.5"
+ 
+ # Google other
+ accompanist = "0.37.3"
+-firebase-messaging = "25.0.1"
+ installreferrer = "2.2"
+ material = "1.13.0"
+ osslicenses-plugin = "0.10.7"
+-play-review = "2.0.2"
+-play-services-ads-id = "18.2.0"
+-play-services-base = "18.9.0"
+-play-services-fido = "21.2.0"
+ protobuf = "4.32.1" # Keep Protobuf in sync with the version used by AppServices.
+ 
+ # Gradle plugins
+@@ -201,15 +196,9 @@ androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "u
+ 
+ # Google other
+ accompanist-drawablepainter = { group = "com.google.accompanist", name = "accompanist-drawablepainter", version.ref = "accompanist" }
+-firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging", version.ref = "firebase-messaging" }
+ installreferrer = { group = "com.android.installreferrer", name = "installreferrer", version.ref = "installreferrer" }
+ google-material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+ osslicenses-plugin = { group = "com.google.android.gms", name = "oss-licenses-plugin", version.ref = "osslicenses-plugin" }
+-play-review = { group = "com.google.android.play", name = "review", version.ref = "play-review" }
+-play-review-ktx = { group = "com.google.android.play", name = "review-ktx", version.ref = "play-review" }
+-play-services-ads-id = { group = "com.google.android.gms", name = "play-services-ads-identifier", version.ref = "play-services-ads-id" }
+-play-services-base = { group = "com.google.android.gms", name = "play-services-base", version.ref = "play-services-base" }
+-play-services-fido = { group = "com.google.android.gms", name = "play-services-fido", version.ref = "play-services-fido" }
+ protobuf-compiler = { group = "com.google.protobuf", name = "protoc", version.ref = "protobuf" }
+ protobuf-javalite = { group = "com.google.protobuf", name = "protobuf-javalite", version.ref = "protobuf" }
+ 
+diff --git a/mobile/android/android-components/.buildconfig.yml b/mobile/android/android-components/.buildconfig.yml
+index f9711dc715e7..c03556c7c7c9 100644
+--- a/mobile/android/android-components/.buildconfig.yml
++++ b/mobile/android/android-components/.buildconfig.yml
+@@ -1696,17 +1696,6 @@ projects:
+     - components:support-base
+     - components:support-test
+     - components:tooling-lint
+-  components:lib-push-firebase:
 -    description: An implementation of concept-push for the Firebase Message Service.
 -    path: components/lib/push-firebase
 -    publish: true
 -    upstream_dependencies:
--    - concept-base
--    - concept-push
--    - support-base
--    - support-test
--    - tooling-lint
-   lib-state:
+-    - components:concept-base
+-    - components:concept-fetch
+-    - components:concept-push
+-    - components:support-base
+-    - components:support-test
+-    - components:tooling-lint
+   components:lib-state:
      description: A library for maintaining application state.
      path: components/lib/state
-diff -r 0a6479ef0332 mobile/android/android-components/plugins/dependencies/src/main/java/DependenciesPlugin.kt
---- a/mobile/android/android-components/plugins/dependencies/src/main/java/DependenciesPlugin.kt	Mon Nov 18 12:58:35 2024 +0000
-+++ b/mobile/android/android-components/plugins/dependencies/src/main/java/DependenciesPlugin.kt	Tue Nov 19 10:17:20 2024 +0300
-@@ -92,13 +92,8 @@
-     const val protobuf_plugin = "0.9.4"
-     object Google {
-         const val accompanist = "0.36.0"
--        const val firebase_messaging = "24.0.3"
-         const val material = "1.12.0"
-         const val osslicenses_plugin = "0.10.6"
--        const val play_review = "2.0.1"
--        const val play_services_ads_id = "16.0.0"
--        const val play_services_base = "18.5.0"
--        const val play_services_fido = "21.1.0"
-         const val protobuf = "4.28.2" // Keep Protobuf in sync with the version used by AppServices.
-     }
+diff --git a/mobile/android/fenix/.buildconfig.yml b/mobile/android/fenix/.buildconfig.yml
+index 1753bcbd86ff..fad6fde5c2a0 100644
+--- a/mobile/android/fenix/.buildconfig.yml
++++ b/mobile/android/fenix/.buildconfig.yml
+@@ -65,7 +65,6 @@ projects:
+     - components:lib-crash-sentry
+     - components:lib-dataprotect
+     - components:lib-publicsuffixlist
+-    - components:lib-push-firebase
+     - components:lib-state
+     - components:service-digitalassetlinks
+     - components:service-firefox-accounts
+diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
+index af2ddca5a621..5d0b5295f5d1 100644
+--- a/mobile/android/fenix/app/build.gradle
++++ b/mobile/android/fenix/app/build.gradle
+@@ -637,12 +637,10 @@ dependencies {
+     implementation project(':components:lib-crash')
+     implementation project(':components:lib-crash-sentry')
+     implementation project(':components:lib-dataprotect')
+-    implementation project(':components:lib-push-firebase')
+     implementation project(':components:lib-state')
  
-@@ -268,14 +263,8 @@
-     const val thirdparty_disklrucache = "com.jakewharton:disklrucache:${Versions.disklrucache}"
-     const val thirdparty_androidsvg = "com.caverock:androidsvg-aar:${Versions.androidsvg}"
+     implementation ComponentsDependencies.mozilla_appservices_syncmanager
+     implementation libs.accompanist.drawablepainter
+-    implementation libs.adjust
+     implementation libs.androidx.activity
+     implementation libs.androidx.activity.ktx
+     implementation libs.androidx.annotation
+@@ -688,16 +686,14 @@ dependencies {
+     implementation libs.androidx.viewpager2
+     implementation libs.androidx.work.runtime
+     implementation libs.google.material
+-    implementation libs.installreferrer
+     implementation libs.kotlinx.coroutines
+     implementation libs.kotlinx.serialization.json
+     implementation libs.mozilla.glean
+-    implementation libs.play.review
+-    implementation libs.play.review.ktx
+-    implementation libs.play.services.ads.id
+     implementation libs.protobuf.javalite
+     implementation libs.sentry
  
--    const val firebase_messaging = "com.google.firebase:firebase-messaging:${Versions.Google.firebase_messaging}"
++    implementation 'org.microg.gms:play-services-ads-identifier:0.3.10.250932'
++
+     debugImplementation libs.androidx.compose.ui.tooling
+     debugImplementation libs.leakcanary
  
-     const val osslicenses_plugin = "com.google.android.gms:oss-licenses-plugin:${Versions.Google.osslicenses_plugin}"
--    const val play_review = "com.google.android.play:review:${Versions.Google.play_review}"
--    const val play_review_ktx = "com.google.android.play:review-ktx:${Versions.Google.play_review}"
--    const val play_services_ads_id = "com.google.android.gms:play-services-ads-identifier:${Versions.Google.play_services_ads_id}"
--    const val play_services_base = "com.google.android.gms:play-services-base:${Versions.Google.play_services_base}"
--    const val play_services_fido = "com.google.android.gms:play-services-fido:${Versions.Google.play_services_fido}"
-     const val protobuf_compiler = "com.google.protobuf:protoc:${Versions.Google.protobuf}"
-     const val protobuf_javalite = "com.google.protobuf:protobuf-javalite:${Versions.Google.protobuf}"
- }
-diff -r 0a6479ef0332 mobile/android/fenix/.buildconfig.yml
---- a/mobile/android/fenix/.buildconfig.yml	Mon Nov 18 12:58:35 2024 +0000
-+++ b/mobile/android/fenix/.buildconfig.yml	Tue Nov 19 10:17:20 2024 +0300
-@@ -63,7 +63,6 @@
-     - lib-crash-sentry
-     - lib-dataprotect
-     - lib-publicsuffixlist
--    - lib-push-firebase
-     - lib-state
-     - service-contile
-     - service-digitalassetlinks
-diff -r 0a6479ef0332 mobile/android/fenix/app/build.gradle
---- a/mobile/android/fenix/app/build.gradle	Mon Nov 18 12:58:35 2024 +0000
-+++ b/mobile/android/fenix/app/build.gradle	Tue Nov 19 10:17:20 2024 +0300
-@@ -655,7 +655,6 @@
+diff --git a/mobile/android/fenix/app/proguard-rules.pro b/mobile/android/fenix/app/proguard-rules.pro
+index 39a6df6fb62e..8eb0cab2d939 100644
+--- a/mobile/android/fenix/app/proguard-rules.pro
++++ b/mobile/android/fenix/app/proguard-rules.pro
+@@ -28,3 +28,11 @@
  
-     implementation project(':lib-crash')
-     implementation project(':lib-crash-sentry')
--    implementation project(':lib-push-firebase')
-     implementation project(':lib-state')
-     implementation project(':lib-dataprotect')
-     testImplementation project(':support-test-fakes')
-@@ -706,16 +705,6 @@
-     implementation ComponentsDependencies.protobuf_javalite
-     implementation ComponentsDependencies.google_material
- 
--    implementation FenixDependencies.adjust
--    implementation FenixDependencies.installreferrer // Required by Adjust
--
--    // Required for the Google Advertising ID
--    implementation ComponentsDependencies.play_services_ads_id
--
--    // Required for in-app reviews
--    implementation ComponentsDependencies.play_review
--    implementation ComponentsDependencies.play_review_ktx
--
-     constraints {
-         implementation (ComponentsDependencies.androidx_tracing) {
-             because 'AndroidX Test gets force-downgraded to 1.0.0 and breaks otherwise'
-diff -r 0a6479ef0332 mobile/android/fenix/app/proguard-rules.pro
---- a/mobile/android/fenix/app/proguard-rules.pro	Mon Nov 18 12:58:35 2024 +0000
-+++ b/mobile/android/fenix/app/proguard-rules.pro	Tue Nov 19 10:17:20 2024 +0300
-@@ -1,23 +1,6 @@
- -dontobfuscate
- 
- ####################################################################################################
--# Sentry
--####################################################################################################
--
--# Recommended config via https://docs.sentry.io/clients/java/modules/android/#manual-integration
--# Since we don't obfuscate, we don't need to use their Gradle plugin to upload ProGuard mappings.
---keepattributes LineNumberTable,SourceFile
---dontwarn org.slf4j.**
---dontwarn javax.**
--
--# Our addition: this class is saved to disk via Serializable, which ProGuard doesn't like.
--# If we exclude this, upload silently fails (Sentry swallows a NPE so we don't crash).
--# I filed https://github.com/getsentry/sentry-java/issues/572
--#
--# If Sentry ever mysteriously stops working after we upgrade it, this could be why.
---keep class io.sentry.event.Event { *; }
--
--####################################################################################################
- # Android and GeckoView built-ins
- ####################################################################################################
- 
-@@ -69,58 +52,6 @@
- 
- -keep class org.mozilla.fenix.**ViewModel { *; }
- 
--####################################################################################################
--# Adjust
--####################################################################################################
--
---keep public class com.adjust.sdk.** { *; }
---keep class com.google.android.gms.common.ConnectionResult {
--    int SUCCESS;
--}
---keep class com.google.android.gms.ads.identifier.AdvertisingIdClient {
--    com.google.android.gms.ads.identifier.AdvertisingIdClient$Info getAdvertisingIdInfo(android.content.Context);
--}
---keep class com.google.android.gms.ads.identifier.AdvertisingIdClient$Info {
--    java.lang.String getId();
--    boolean isLimitAdTrackingEnabled();
--}
---keep public class com.android.installreferrer.** { *; }
---keep class dalvik.system.VMRuntime {
--    java.lang.String getRuntime();
--}
---keep class android.os.Build {
--    java.lang.String[] SUPPORTED_ABIS;
--    java.lang.String CPU_ABI;
--}
---keep class android.content.res.Configuration {
--    android.os.LocaledList getLocales();
--    java.util.Locale locale;
--}
---keep class android.os.LocaleList {
--    java.util.Locale get(int);
--}
--
--# Keep code generated from Glean Metrics
---keep class org.mozilla.fenix.GleanMetrics.** {  *; }
--
--# Keep motionlayout internal methods
--# https://github.com/mozilla-mobile/fenix/issues/2094
---keep class androidx.constraintlayout.** { *; }
--
--# Keep adjust relevant classes
---keep class com.adjust.sdk.** { *; }
---keep class com.google.android.gms.common.ConnectionResult {
--    int SUCCESS;
--}
---keep class com.google.android.gms.ads.identifier.AdvertisingIdClient {
--    com.google.android.gms.ads.identifier.AdvertisingIdClient$Info getAdvertisingIdInfo(android.content.Context);
--}
---keep class com.google.android.gms.ads.identifier.AdvertisingIdClient$Info {
--    java.lang.String getId();
--    boolean isLimitAdTrackingEnabled();
--}
---keep public class com.android.installreferrer.** { *; }
--
- # Keep Android Lifecycle methods
- # https://bugzilla.mozilla.org/show_bug.cgi?id=1596302
- -keep class androidx.lifecycle.** { *; }
-@@ -130,3 +61,11 @@
- -dontwarn java.beans.IntrospectionException
- -dontwarn java.beans.Introspector
- -dontwarn java.beans.PropertyDescriptor
+ # Keep code generated from Glean Metrics
+ -keep class org.mozilla.fenix.GleanMetrics.** {  *; }
 +
 +####################################################################################################
 +# Checker Framework
@@ -187,23 +119,12 @@ diff -r 0a6479ef0332 mobile/android/fenix/app/proguard-rules.pro
 +-dontwarn org.checkerframework.checker.nullness.qual.EnsuresNonNull
 +-dontwarn org.checkerframework.checker.nullness.qual.EnsuresNonNullIf
 +-dontwarn org.checkerframework.checker.nullness.qual.RequiresNonNull
-diff -r 0a6479ef0332 mobile/android/fenix/app/src/main/AndroidManifest.xml
---- a/mobile/android/fenix/app/src/main/AndroidManifest.xml	Mon Nov 18 12:58:35 2024 +0000
-+++ b/mobile/android/fenix/app/src/main/AndroidManifest.xml	Tue Nov 19 10:17:20 2024 +0300
-@@ -32,9 +32,6 @@
-     <uses-permission android:name="android.permission.VIBRATE" />
-     <uses-permission android:name="android.permission.USE_BIOMETRIC" />
- 
--    <!-- Needed for Google Play policy https://support.google.com/googleplay/android-developer/answer/6048248 -->
--    <uses-permission android:name="com.google.android.gms.permission.AD_ID"/>
--
-     <!-- Needed to prompt the user to give permission to install a downloaded apk -->
-     <uses-permission-sdk-23 android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
- 
-diff -r 0a6479ef0332 mobile/android/fenix/app/src/main/java/com/adjust/sdk/Adjust.java
---- /dev/null	Thu Jan 01 00:00:00 1970 +0000
-+++ b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/Adjust.java	Tue Nov 19 10:17:20 2024 +0300
-@@ -0,0 +1,47 @@
+diff --git a/mobile/android/fenix/app/src/main/java/com/adjust/sdk/Adjust.java b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/Adjust.java
+new file mode 100644
+index 000000000000..d377e98bbf05
+--- /dev/null
++++ b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/Adjust.java
+@@ -0,0 +1,50 @@
 +/*
 + * Copyright (c) 2012-2017 adjust GmbH,
 + * http://www.adjust.com
@@ -233,7 +154,7 @@ diff -r 0a6479ef0332 mobile/android/fenix/app/src/main/java/com/adjust/sdk/Adjus
 +import android.content.Context;
 +
 +public class Adjust {
-+    public static void onCreate(AdjustConfig adjustConfig) {
++    public static void initSdk(AdjustConfig adjustConfig) {
 +    }
 +
 +    public static void trackEvent(AdjustEvent event) {
@@ -245,15 +166,20 @@ diff -r 0a6479ef0332 mobile/android/fenix/app/src/main/java/com/adjust/sdk/Adjus
 +    public static void onPause() {
 +    }
 +
-+    public static void setEnabled(boolean enabled) {
++    public static void enable() {
++    }
++
++    public static void disable() {
 +    }
 +
 +    public static void gdprForgetMe(final Context context) {
 +    }
 +}
-diff -r 0a6479ef0332 mobile/android/fenix/app/src/main/java/com/adjust/sdk/AdjustAttribution.java
---- /dev/null	Thu Jan 01 00:00:00 1970 +0000
-+++ b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/AdjustAttribution.java	Tue Nov 19 10:17:20 2024 +0300
+diff --git a/mobile/android/fenix/app/src/main/java/com/adjust/sdk/AdjustAttribution.java b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/AdjustAttribution.java
+new file mode 100644
+index 000000000000..ab6b3badbdb1
+--- /dev/null
++++ b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/AdjustAttribution.java
 @@ -0,0 +1,49 @@
 +/*
 + * Copyright (c) 2012-2017 adjust GmbH,
@@ -304,9 +230,11 @@ diff -r 0a6479ef0332 mobile/android/fenix/app/src/main/java/com/adjust/sdk/Adjus
 +        return "";
 +    }
 +}
-diff -r 0a6479ef0332 mobile/android/fenix/app/src/main/java/com/adjust/sdk/AdjustConfig.java
---- /dev/null	Thu Jan 01 00:00:00 1970 +0000
-+++ b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/AdjustConfig.java	Tue Nov 19 10:17:20 2024 +0300
+diff --git a/mobile/android/fenix/app/src/main/java/com/adjust/sdk/AdjustConfig.java b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/AdjustConfig.java
+new file mode 100644
+index 000000000000..f563917d2070
+--- /dev/null
++++ b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/AdjustConfig.java
 @@ -0,0 +1,49 @@
 +/*
 + * Copyright (c) 2012-2017 adjust GmbH,
@@ -351,15 +279,17 @@ diff -r 0a6479ef0332 mobile/android/fenix/app/src/main/java/com/adjust/sdk/Adjus
 +    public void setOnAttributionChangedListener(OnAttributionChangedListener onAttributionChangedListener) {
 +    }
 +
-+    public void setPreinstallTrackingEnabled(boolean preinstallTrackingEnabled) {
++    public void enablePreinstallTracking() {
 +    }
 +
 +    public void setLogLevel(LogLevel logLevel) {
 +    }
 +}
-diff -r 0a6479ef0332 mobile/android/fenix/app/src/main/java/com/adjust/sdk/AdjustEvent.java
---- /dev/null	Thu Jan 01 00:00:00 1970 +0000
-+++ b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/AdjustEvent.java	Tue Nov 19 10:17:20 2024 +0300
+diff --git a/mobile/android/fenix/app/src/main/java/com/adjust/sdk/AdjustEvent.java b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/AdjustEvent.java
+new file mode 100644
+index 000000000000..0b4d80ed4b2c
+--- /dev/null
++++ b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/AdjustEvent.java
 @@ -0,0 +1,31 @@
 +package com.adjust.sdk;
 +
@@ -392,9 +322,11 @@ diff -r 0a6479ef0332 mobile/android/fenix/app/src/main/java/com/adjust/sdk/Adjus
 +    public void setPurchaseToken(String purchaseToken) {
 +    }
 +}
-diff -r 0a6479ef0332 mobile/android/fenix/app/src/main/java/com/adjust/sdk/Constants.java
---- /dev/null	Thu Jan 01 00:00:00 1970 +0000
-+++ b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/Constants.java	Tue Nov 19 10:17:20 2024 +0300
+diff --git a/mobile/android/fenix/app/src/main/java/com/adjust/sdk/Constants.java b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/Constants.java
+new file mode 100644
+index 000000000000..bfaeee26e8e1
+--- /dev/null
++++ b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/Constants.java
 @@ -0,0 +1,18 @@
 +//
 +//  Constants.java
@@ -414,9 +346,11 @@ diff -r 0a6479ef0332 mobile/android/fenix/app/src/main/java/com/adjust/sdk/Const
 +public interface Constants {
 +    String ADJUST_PREINSTALL_SYSTEM_PROPERTY_PATH = "adjust.preinstall.path";
 +}
-diff -r 0a6479ef0332 mobile/android/fenix/app/src/main/java/com/adjust/sdk/LogLevel.java
---- /dev/null	Thu Jan 01 00:00:00 1970 +0000
-+++ b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/LogLevel.java	Tue Nov 19 10:17:20 2024 +0300
+diff --git a/mobile/android/fenix/app/src/main/java/com/adjust/sdk/LogLevel.java b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/LogLevel.java
+new file mode 100644
+index 000000000000..f4ef17f4c492
+--- /dev/null
++++ b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/LogLevel.java
 @@ -0,0 +1,43 @@
 +/*
 + * Copyright (c) 2012-2017 adjust GmbH,
@@ -450,7 +384,7 @@ diff -r 0a6479ef0332 mobile/android/fenix/app/src/main/java/com/adjust/sdk/LogLe
 + * Created by pfms on 11/03/15.
 + */
 +public enum LogLevel {
-+    VERBOSE(Log.VERBOSE), DEBUG(Log.DEBUG), INFO(Log.INFO), WARN(Log.WARN), ERROR(Log.ERROR), ASSERT(Log.ASSERT), SUPRESS(8);
++    VERBOSE(Log.VERBOSE), DEBUG(Log.DEBUG), INFO(Log.INFO), WARN(Log.WARN), ERROR(Log.ERROR), ASSERT(Log.ASSERT), SUPPRESS(8);
 +    final int androidLogLevel;
 +
 +    LogLevel(final int androidLogLevel) {
@@ -461,9 +395,11 @@ diff -r 0a6479ef0332 mobile/android/fenix/app/src/main/java/com/adjust/sdk/LogLe
 +        return androidLogLevel;
 +    }
 +}
-diff -r 0a6479ef0332 mobile/android/fenix/app/src/main/java/com/adjust/sdk/OnAttributionChangedListener.java
---- /dev/null	Thu Jan 01 00:00:00 1970 +0000
-+++ b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/OnAttributionChangedListener.java	Tue Nov 19 10:17:20 2024 +0300
+diff --git a/mobile/android/fenix/app/src/main/java/com/adjust/sdk/OnAttributionChangedListener.java b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/OnAttributionChangedListener.java
+new file mode 100644
+index 000000000000..7efa1c6804c6
+--- /dev/null
++++ b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/OnAttributionChangedListener.java
 @@ -0,0 +1,29 @@
 +/*
 + * Copyright (c) 2012-2017 adjust GmbH,
@@ -494,9 +430,11 @@ diff -r 0a6479ef0332 mobile/android/fenix/app/src/main/java/com/adjust/sdk/OnAtt
 +public interface OnAttributionChangedListener {
 +    void onAttributionChanged(AdjustAttribution attribution);
 +}
-diff -r 0a6479ef0332 mobile/android/fenix/app/src/main/java/com/google/firebase/messaging/FirebaseMessagingService.java
---- /dev/null	Thu Jan 01 00:00:00 1970 +0000
-+++ b/mobile/android/fenix/app/src/main/java/com/google/firebase/messaging/FirebaseMessagingService.java	Tue Nov 19 10:17:20 2024 +0300
+diff --git a/mobile/android/fenix/app/src/main/java/com/google/firebase/messaging/FirebaseMessagingService.java b/mobile/android/fenix/app/src/main/java/com/google/firebase/messaging/FirebaseMessagingService.java
+new file mode 100644
+index 000000000000..4d5fd8153d21
+--- /dev/null
++++ b/mobile/android/fenix/app/src/main/java/com/google/firebase/messaging/FirebaseMessagingService.java
 @@ -0,0 +1,42 @@
 +// Copyright 2020 Google LLC
 +//
@@ -540,9 +478,11 @@ diff -r 0a6479ef0332 mobile/android/fenix/app/src/main/java/com/google/firebase/
 +    }
 +
 +}
-diff -r 0a6479ef0332 mobile/android/fenix/app/src/main/java/com/google/firebase/messaging/RemoteMessage.java
---- /dev/null	Thu Jan 01 00:00:00 1970 +0000
-+++ b/mobile/android/fenix/app/src/main/java/com/google/firebase/messaging/RemoteMessage.java	Tue Nov 19 10:17:20 2024 +0300
+diff --git a/mobile/android/fenix/app/src/main/java/com/google/firebase/messaging/RemoteMessage.java b/mobile/android/fenix/app/src/main/java/com/google/firebase/messaging/RemoteMessage.java
+new file mode 100644
+index 000000000000..9ad59a31e43c
+--- /dev/null
++++ b/mobile/android/fenix/app/src/main/java/com/google/firebase/messaging/RemoteMessage.java
 @@ -0,0 +1,33 @@
 +// Copyright 2020 Google LLC
 +//
@@ -577,9 +517,11 @@ diff -r 0a6479ef0332 mobile/android/fenix/app/src/main/java/com/google/firebase/
 +    }
 +
 +}
-diff -r 0a6479ef0332 mobile/android/fenix/app/src/main/java/mozilla/components/lib/push/firebase/AbstractFirebasePushService.kt
---- /dev/null	Thu Jan 01 00:00:00 1970 +0000
-+++ b/mobile/android/fenix/app/src/main/java/mozilla/components/lib/push/firebase/AbstractFirebasePushService.kt	Tue Nov 19 10:17:20 2024 +0300
+diff --git a/mobile/android/fenix/app/src/main/java/mozilla/components/lib/push/firebase/AbstractFirebasePushService.kt b/mobile/android/fenix/app/src/main/java/mozilla/components/lib/push/firebase/AbstractFirebasePushService.kt
+new file mode 100644
+index 000000000000..b50a6f03a218
+--- /dev/null
++++ b/mobile/android/fenix/app/src/main/java/mozilla/components/lib/push/firebase/AbstractFirebasePushService.kt
 @@ -0,0 +1,32 @@
 +/* This Source Code Form is subject to the terms of the Mozilla Public
 + * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -613,31 +555,11 @@ diff -r 0a6479ef0332 mobile/android/fenix/app/src/main/java/mozilla/components/l
 +        return false
 +    }
 +}
-diff -r 0a6479ef0332 mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt	Mon Nov 18 12:58:35 2024 +0000
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt	Tue Nov 19 10:17:20 2024 +0300
-@@ -18,7 +18,7 @@
-      * This feature does not only depend on this flag. It requires the AMO collection override to
-      * be enabled which is behind the Secret Settings.
-      * */
--    val customExtensionCollectionFeature = Config.channel.isNightlyOrDebug || Config.channel.isBeta
-+    val customExtensionCollectionFeature = true
- 
-     /**
-      * Pull-to-refresh allows you to pull the web content down far enough to have the page to
-@@ -37,7 +37,7 @@
-     fun isPocketRecommendationsFeatureEnabled(context: Context): Boolean {
-         val langTag = LocaleManager.getCurrentLocale(context)
-             ?.toLanguageTag() ?: getSystemDefault().toLanguageTag()
--        return listOf("en-US", "en-CA").contains(langTag)
-+        return false && listOf("en-US", "en-CA").contains(langTag)
-     }
- 
-     /**
-diff -r 0a6479ef0332 mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BaseBrowserFragment.kt
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BaseBrowserFragment.kt	Mon Nov 18 12:58:35 2024 +0000
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BaseBrowserFragment.kt	Tue Nov 19 10:17:20 2024 +0300
-@@ -1112,19 +1112,16 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BaseBrowserFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BaseBrowserFragment.kt
+index 67fff191e40c..fd7466e5d4fe 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BaseBrowserFragment.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BaseBrowserFragment.kt
+@@ -1211,19 +1211,16 @@ abstract class BaseBrowserFragment :
              view = view,
          )
  
@@ -667,129 +589,161 @@ diff -r 0a6479ef0332 mobile/android/fenix/app/src/main/java/org/mozilla/fenix/br
  
          screenOrientationFeature.set(
              feature = ScreenOrientationFeature(
-diff -r 0a6479ef0332 mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt	Mon Nov 18 12:58:35 2024 +0000
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt	Tue Nov 19 10:17:20 2024 +0300
-@@ -10,7 +10,6 @@
- import androidx.compose.runtime.Composable
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
+index 5c75c1462570..d7119f818e64 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
+@@ -10,7 +10,6 @@ import androidx.compose.runtime.Composable
+ import androidx.compose.runtime.ReadOnlyComposable
  import androidx.compose.ui.platform.LocalContext
  import androidx.core.app.NotificationManagerCompat
 -import com.google.android.play.core.review.ReviewManagerFactory
  import mozilla.components.feature.addons.AddonManager
  import mozilla.components.feature.addons.amo.AMOAddonsProvider
  import mozilla.components.feature.addons.migration.DefaultSupportedAddonsChecker
-@@ -178,7 +177,6 @@
+@@ -215,7 +214,6 @@ class Components(private val context: Context) {
  
-     val reviewPromptController by lazyMonitored {
-         ReviewPromptController(
+     val playStoreReviewPromptController by lazyMonitored {
+         PlayStoreReviewPromptController(
 -            manager = ReviewManagerFactory.create(context),
-             reviewSettings = FenixReviewSettings(settings),
+             numberOfAppLaunches = { settings.numberOfAppLaunches },
          )
      }
-diff -r 0a6479ef0332 mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt	Mon Nov 18 12:58:35 2024 +0000
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt	Tue Nov 19 10:17:20 2024 +0300
-@@ -586,8 +586,14 @@
-                 } else {
-                     defaultTopSites.add(
-                         Pair(
--                            context.getString(R.string.default_top_site_google),
--                            SupportUtils.GOOGLE_URL,
-+                            context.getString(R.string.default_top_site_fdroid),
-+                            SupportUtils.FDROID_URL,
-+                        ),
-+                    )
-+                    defaultTopSites.add(
-+                        Pair(
-+                            context.getString(R.string.default_top_site_eff),
-+                            SupportUtils.EFF_URL,
-                         ),
-                     )
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
+index 9d690c06bc74..5b3aa7326e75 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
+@@ -620,8 +620,15 @@ class Core(
+             if (!context.settings().defaultTopSitesAdded) {
+                 defaultTopSites.add(
+                     Pair(
+-                        context.getString(R.string.default_top_site_google),
+-                        SupportUtils.GOOGLE_URL,
++                        context.getString(R.string.default_top_site_fdroid),
++                        SupportUtils.FDROID_URL,
++                    ),
++                )
++
++                defaultTopSites.add(
++                    Pair(
++                        context.getString(R.string.default_top_site_eff),
++                        SupportUtils.EFF_URL,
+                     ),
+                 )
  
-diff -r 0a6479ef0332 mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/ReviewPromptController.kt
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/ReviewPromptController.kt	Mon Nov 18 12:58:35 2024 +0000
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/ReviewPromptController.kt	Tue Nov 19 10:17:20 2024 +0300
-@@ -6,8 +6,6 @@
- 
- import android.app.Activity
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/PlayStoreReviewPromptController.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/PlayStoreReviewPromptController.kt
+index 833ff05c35d4..84a7584e13c4 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/PlayStoreReviewPromptController.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/PlayStoreReviewPromptController.kt
+@@ -9,9 +9,6 @@ import android.content.ActivityNotFoundException
+ import android.content.Intent
  import androidx.annotation.VisibleForTesting
+ import androidx.core.net.toUri
+-import com.google.android.play.core.review.ReviewException
 -import com.google.android.play.core.review.ReviewInfo
 -import com.google.android.play.core.review.ReviewManager
- import kotlinx.coroutines.Dispatchers.Main
+ import kotlinx.coroutines.Dispatchers
  import kotlinx.coroutines.withContext
- import org.mozilla.fenix.GleanMetrics.ReviewPrompt
-@@ -45,24 +43,9 @@
-  * Controls the Review Prompt behavior.
+ import mozilla.components.support.base.log.logger.Logger
+@@ -29,7 +26,6 @@ val logger = Logger("PlayStoreReviewPromptController")
+  * Wraps the Play Store In-App Review API.
   */
- class ReviewPromptController(
+ class PlayStoreReviewPromptController(
 -    private val manager: ReviewManager,
-     private val reviewSettings: ReviewSettings,
-     private val timeNowInMillis: () -> Long = { System.currentTimeMillis() },
--    private val tryPromptReview: suspend (Activity) -> Unit = { activity ->
--        val flow = manager.requestReviewFlow()
--
--        withContext(Main) {
--            flow.addOnCompleteListener {
--                if (it.isSuccessful) {
--                    manager.launchReviewFlow(activity, it.result)
--                    recordReviewPromptEvent(
--                        it.result.toString(),
--                        reviewSettings.numberOfAppLaunches,
--                        Date(),
--                    )
--                }
--            }
--        }
-+    private val tryPromptReview: suspend (Activity) -> Unit = { _ ->
-     },
+     private val numberOfAppLaunches: () -> Int,
  ) {
-     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-diff -r 0a6479ef0332 mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/ToolsSubmenu.kt
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/ToolsSubmenu.kt	Mon Nov 18 12:58:35 2024 +0000
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/ToolsSubmenu.kt	Tue Nov 19 10:17:20 2024 +0300
-@@ -210,7 +210,7 @@
-                         enabled = true,
-                         icon = BitmapFactory.decodeResource(
-                             LocalContext.current.resources,
--                            R.drawable.googleg_standard_color_18,
-+                            R.drawable.ic_download,
-                         ),
-                         badgeText = "1",
-                         badgeTextColor = Color.White.toArgb(),
-@@ -253,7 +253,7 @@
-                         enabled = true,
-                         icon = BitmapFactory.decodeResource(
-                             LocalContext.current.resources,
--                            R.drawable.googleg_standard_color_18,
-+                            R.drawable.ic_download,
-                         ),
-                         badgeText = "1",
-                         badgeTextColor = Color.White.toArgb(),
-diff -r 0a6479ef0332 mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt	Mon Nov 18 12:58:35 2024 +0000
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt	Tue Nov 19 10:17:20 2024 +0300
-@@ -6,14 +6,10 @@
+ 
+@@ -37,60 +33,12 @@ class PlayStoreReviewPromptController(
+      * Launch the in-app review flow, unless we've hit the quota.
+      */
+     suspend fun tryPromptReview(activity: Activity) {
+-        logger.info("tryPromptReview in progress...")
+-        val reviewInfoFlow = withContext(Dispatchers.IO) { manager.requestReviewFlow() }
+-
+-        reviewInfoFlow.addOnCompleteListener {
+-            val resultString = if (it.isSuccessful) {
+-                logger.info("Review flow launched.")
+-                // Launch the in-app flow.
+-                manager.launchReviewFlow(activity, it.result)
+-
+-                it.result.toString()
+-            } else {
+-                // Launch the Play store flow.
+-                val reviewErrorCode =
+-                    (it.exception as? ReviewException)?.errorCode ?: ERROR_CODE_UNEXPECTED
+-                logger.warn("Failed to launch in-app review flow due to: $reviewErrorCode .")
+-
+-                tryLaunchPlayStoreReview(activity)
+-
+-                "reviewErrorCode=$reviewErrorCode"
+-            }
+-
+-            recordReviewPromptEvent(
+-                reviewInfoAsString = resultString,
+-                numberOfAppLaunches = numberOfAppLaunches(),
+-                now = Date(),
+-            )
+-        }
+-
+-        logger.info("tryPromptReview completed.")
+     }
+ 
+     /**
+      * Try to launch the play store review flow.
+      */
+     fun tryLaunchPlayStoreReview(activity: Activity) {
+-        logger.info("tryLaunchPlayStoreReview in progress...")
+-
+-        try {
+-            logger.info("Navigating to Play store listing.")
+-            activity.startActivity(
+-                Intent(Intent.ACTION_VIEW, SupportUtils.RATE_APP_URL.toUri()),
+-            )
+-        } catch (e: ActivityNotFoundException) {
+-            // Device without the play store installed.
+-            // Opening the play store website.
+-            (activity as HomeActivity).openToBrowserAndLoad(
+-                searchTermOrURL = SupportUtils.FENIX_PLAY_STORE_URL,
+-                newTab = true,
+-                from = BrowserDirection.FromGlobal,
+-            )
+-            logger.warn("Failed to launch play store review flow due to: $e .")
+-        }
+-
+-        logger.info("tryLaunchPlayStoreReview completed.")
+     }
+ 
+     companion object {
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt
+index 233855f4c25b..2af8f7844428 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt
+@@ -6,8 +6,6 @@ package org.mozilla.fenix.components.metrics
  
  import android.content.Context
  import android.os.RemoteException
 -import com.android.installreferrer.api.InstallReferrerClient
 -import com.android.installreferrer.api.InstallReferrerStateListener
- import mozilla.components.support.base.log.logger.Logger
+ import kotlinx.coroutines.CoroutineScope
+ import kotlinx.coroutines.Dispatchers
+ import kotlinx.coroutines.launch
+@@ -15,9 +13,6 @@ import mozilla.components.support.base.log.logger.Logger
  import org.json.JSONException
  import org.json.JSONObject
  import org.mozilla.fenix.FeatureFlags
 -import org.mozilla.fenix.GleanMetrics.MetaAttribution
+-import org.mozilla.fenix.GleanMetrics.Pings
 -import org.mozilla.fenix.GleanMetrics.PlayStoreAttribution
- import org.mozilla.fenix.ext.components
  import org.mozilla.fenix.ext.settings
  import org.mozilla.fenix.utils.Settings
-@@ -30,84 +26,9 @@
+ import java.io.UnsupportedEncodingException
+@@ -33,86 +28,10 @@ class InstallReferrerMetricsService(private val context: Context) : MetricsServi
      private val logger = Logger("InstallReferrerMetricsService")
      override val type = MetricServiceType.Data
  
 -    private var referrerClient: InstallReferrerClient? = null
 -
--    override fun start() {
+     override fun start() {
 -        if (context.settings().utmParamsKnown) {
 -            return
 -        }
@@ -802,7 +756,8 @@ diff -r 0a6479ef0332 mobile/android/fenix/app/src/main/java/org/mozilla/fenix/co
 -            object : InstallReferrerStateListener {
 -                override fun onInstallReferrerSetupFinished(responseCode: Int) {
 -                    PlayStoreAttribution.attributionTime.stopAndAccumulate(timerId)
--                    val firstSession = FirstSessionPing(context, context.components.core.store)
+-                    val firstSession = FirstSessionPing(context)
+-                    PlayStoreAttribution.responseCode.set(responseCode.toString())
 -                    when (responseCode) {
 -                        InstallReferrerClient.InstallReferrerResponse.OK -> {
 -                            // Connection established.
@@ -822,10 +777,9 @@ diff -r 0a6479ef0332 mobile/android/fenix/app/src/main/java/org/mozilla/fenix/co
 -                            }
 -
 -                            PlayStoreAttribution.installReferrerResponse.set(installReferrerResponse)
-+    override fun start() { /* noop */ }
- 
+-
 -                            val utmParams = UTMParams.parseUTMParameters(installReferrerResponse)
--                            if (FeatureFlags.metaAttributionEnabled) {
+-                            if (FeatureFlags.META_ATTRIBUTION_ENABLED) {
 -                                MetaParams.extractMetaAttribution(utmParams.content)
 -                                    ?.recordMetaAttribution()
 -                            }
@@ -834,6 +788,7 @@ diff -r 0a6479ef0332 mobile/android/fenix/app/src/main/java/org/mozilla/fenix/co
 -                            context.settings().utmParamsKnown = true
 -
 -                            firstSession.checkAndSend()
+-                            triggerPing()
 -                        }
 -
 -                        InstallReferrerClient.InstallReferrerResponse.FEATURE_NOT_SUPPORTED,
@@ -843,6 +798,7 @@ diff -r 0a6479ef0332 mobile/android/fenix/app/src/main/java/org/mozilla/fenix/co
 -                            // unrecoverable errors, but we still want to send the first-session ping.
 -                            context.settings().utmParamsKnown = true
 -                            firstSession.checkAndSend()
+-                            triggerPing()
 -                        }
 -
 -                        InstallReferrerClient.InstallReferrerResponse.SERVICE_UNAVAILABLE -> {
@@ -860,17 +816,25 @@ diff -r 0a6479ef0332 mobile/android/fenix/app/src/main/java/org/mozilla/fenix/co
 -                }
 -            },
 -        )
--    }
--
--    override fun stop() {
+     }
+ 
+     override fun stop() {
 -        referrerClient?.endConnection()
 -        referrerClient = null
--    }
-+    override fun stop() { /* noop */ }
+     }
  
      override fun track(event: Event) = Unit
+@@ -120,9 +39,6 @@ class InstallReferrerMetricsService(private val context: Context) : MetricsServi
+     override fun shouldTrack(event: Event): Boolean = false
  
-@@ -225,12 +146,6 @@
+     private fun triggerPing() {
+-        CoroutineScope(Dispatchers.IO).launch {
+-            Pings.playStoreAttribution.submit()
+-        }
+     }
+ }
+ 
+@@ -237,12 +153,6 @@ data class UTMParams(
              return
          }
          intoSettings(settings)
@@ -883,7 +847,7 @@ diff -r 0a6479ef0332 mobile/android/fenix/app/src/main/java/org/mozilla/fenix/co
      }
  }
  
-@@ -325,9 +240,6 @@
+@@ -337,9 +247,5 @@ data class MetaParams(
       * record META attribution params to telemetry
       */
      fun recordMetaAttribution() {
@@ -891,151 +855,295 @@ diff -r 0a6479ef0332 mobile/android/fenix/app/src/main/java/org/mozilla/fenix/co
 -        MetaAttribution.t.set(t)
 -        MetaAttribution.data.set(data)
 -        MetaAttribution.nonce.set(nonce)
-+        return
      }
  }
-diff -r 0a6479ef0332 mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/MetricsUtils.kt
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/MetricsUtils.kt	Mon Nov 18 12:58:35 2024 +0000
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/MetricsUtils.kt	Tue Nov 19 10:17:20 2024 +0300
-@@ -7,9 +7,6 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/MarketingAttributionService.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/MarketingAttributionService.kt
+index f1d549f34da2..e17ece068589 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/MarketingAttributionService.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/MarketingAttributionService.kt
+@@ -7,8 +7,6 @@ package org.mozilla.fenix.components.metrics
  import android.content.Context
- import android.util.Base64
+ import android.os.RemoteException
  import androidx.annotation.VisibleForTesting
--import com.google.android.gms.ads.identifier.AdvertisingIdClient
--import com.google.android.gms.common.GooglePlayServicesNotAvailableException
--import com.google.android.gms.common.GooglePlayServicesRepairableException
- import kotlinx.coroutines.Dispatchers
- import kotlinx.coroutines.withContext
- import mozilla.components.browser.state.search.SearchEngine
-@@ -107,26 +104,8 @@
+-import com.android.installreferrer.api.InstallReferrerClient
+-import com.android.installreferrer.api.InstallReferrerStateListener
+ import mozilla.components.support.base.log.logger.Logger
+ import org.mozilla.fenix.ext.components
+ import org.mozilla.fenix.ext.settings
+@@ -24,74 +22,17 @@ const val ADJUST_REFTAG_PREFIX = "adjust_reftag="
+  */
+ class MarketingAttributionService(private val context: Context) {
+     private val logger = Logger("MarketingAttributionService")
+-    private var referrerClient: InstallReferrerClient? = null
+ 
+     /**
+      * Starts the connection with the install referrer and handle the response.
       */
-     @Suppress("TooGenericExceptionCaught")
-     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
--    internal fun getAdvertisingID(context: Context): String? {
--        return try {
--            AdvertisingIdClient.getAdvertisingIdInfo(context).id
--        } catch (e: GooglePlayServicesNotAvailableException) {
--            Logger.debug("getAdvertisingID() - Google Play not installed on the device")
--            null
--        } catch (e: GooglePlayServicesRepairableException) {
--            Logger.debug("getAdvertisingID() - recoverable error connecting to Google Play Services")
--            null
--        } catch (e: IllegalStateException) {
--            // This is unlikely to happen, as this should be running off the main thread.
--            Logger.debug("getAdvertisingID() - AdvertisingIdClient must be called off the main thread")
--            null
--        } catch (e: IOException) {
--            Logger.debug("getAdvertisingID() - unable to connect to Google Play Services")
--            null
--        } catch (e: NullPointerException) {
--            Logger.debug("getAdvertisingID() - no Google Advertising ID available")
--            null
--        }
-+    internal fun getAdvertisingID(@Suppress("UNUSED_PARAMETER") context: Context): String? {
-+        return null
+     fun start() {
+-        val client = InstallReferrerClient.newBuilder(context).build()
+-        referrerClient = client
+-
+-        client.startConnection(
+-            object : InstallReferrerStateListener {
+-                override fun onInstallReferrerSetupFinished(responseCode: Int) {
+-                    when (responseCode) {
+-                        InstallReferrerClient.InstallReferrerResponse.OK -> {
+-                            // Connection established.
+-                            val installReferrerResponse = try {
+-                                client.installReferrer.installReferrer
+-                            } catch (e: RemoteException) {
+-                                // We can't do anything about this.
+-                                logger.error("Failed to retrieve install referrer response", e)
+-                                null
+-                            } catch (e: SecurityException) {
+-                                // https://issuetracker.google.com/issues/72926755
+-                                logger.error("Failed to retrieve install referrer response", e)
+-                                null
+-                            }
+-
+-                            if (!installReferrerResponse.isNullOrBlank()) {
+-                                response = installReferrerResponse
+-                                val utmParams = UTMParams.parseUTMParameters(installReferrerResponse)
+-
+-                                context.components.distributionIdManager
+-                                    .updateDistributionIdFromUtmParams(utmParams)
+-                            }
+-
+-                            context.settings().shouldShowMarketingOnboarding =
+-                                shouldShowMarketingOnboarding(installReferrerResponse)
+-
+-                            return
+-                        }
+-
+-                        InstallReferrerClient.InstallReferrerResponse.FEATURE_NOT_SUPPORTED,
+-                        InstallReferrerClient.InstallReferrerResponse.DEVELOPER_ERROR,
+-                        InstallReferrerClient.InstallReferrerResponse.PERMISSION_ERROR,
+-                        InstallReferrerClient.InstallReferrerResponse.SERVICE_UNAVAILABLE,
+-                        -> {
+-                            context.settings().shouldShowMarketingOnboarding = false
+-                            return
+-                        }
+-                    }
+-
+-                    // End the connection, and null out the client.
+-                    stop()
+-                }
+-
+-                override fun onInstallReferrerServiceDisconnected() {
+-                    referrerClient = null
+-                }
+-            },
+-        )
      }
  
      /**
-diff -r 0a6479ef0332 mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/fake/FakeHomepagePreview.kt
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/fake/FakeHomepagePreview.kt	Mon Nov 18 12:58:35 2024 +0000
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/fake/FakeHomepagePreview.kt	Tue Nov 19 10:17:20 2024 +0300
-@@ -5,7 +5,6 @@
- package org.mozilla.fenix.home.fake
+      * Stops the connection with the install referrer.
+      */
+     fun stop() {
+-        referrerClient?.endConnection()
+-        referrerClient = null
+     }
  
- import android.content.Context
--import com.google.firebase.util.nextAlphanumericString
- import mozilla.components.browser.state.state.ContentState
- import mozilla.components.browser.state.state.TabSessionState
- import mozilla.components.browser.state.state.recover.RecoverableTab
-@@ -235,7 +234,7 @@
-                 add(
-                     RecentTab.Tab(
-                         TabSessionState(
--                            id = randomString(),
-+                            id = "rAnDoM",
-                             content = ContentState(
-                                 url = URL,
-                             ),
-@@ -329,9 +328,4 @@
-     private const val URL = "mozilla.com"
+     /**
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/pocket/ContentRecommendationsFeatureHelper.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/pocket/ContentRecommendationsFeatureHelper.kt
+index d211d3625dbf..0458e8704d5c 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/pocket/ContentRecommendationsFeatureHelper.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/pocket/ContentRecommendationsFeatureHelper.kt
+@@ -16,22 +16,7 @@ object ContentRecommendationsFeatureHelper {
+     /**
+      * List of supported content recommendations locales.
+      */
+-    val CONTENT_RECOMMENDATIONS_SUPPORTED_LOCALE = listOf(
+-        "fr",
+-        "fr-FR",
+-        "es",
+-        "es-ES",
+-        "it",
+-        "it-IT",
+-        "en",
+-        "en-CA",
+-        "en-GB",
+-        "en-US",
+-        "de",
+-        "de-DE",
+-        "de-AT",
+-        "de-CH",
+-    )
++    val CONTENT_RECOMMENDATIONS_SUPPORTED_LOCALE = listOf<String>()
  
-     private fun randomLong() = random.nextLong()
+     /**
+      * Show Pocket sponsored stories in between Pocket recommended stories on home.
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
+index 8d46a483fcff..cef6afd4d01e 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
+@@ -455,8 +455,7 @@ class OnboardingFragment : Fragment() {
+         }
+ 
+         if (!settings.isTelemetryEnabled) {
+-            Pings.onboardingOptOut.setEnabled(true)
+-            Pings.onboardingOptOut.submit()
++            Pings.onboardingOptOut.setEnabled(false)
+         }
+ 
+         startMetricsIfEnabled(
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
+index 40212e28e9e0..6f8455fa6f8a 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
+@@ -297,28 +297,6 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
+             isVisible = Config.channel.isNightlyOrDebug
+         }
+ 
+-        requirePreference<SwitchPreference>(R.string.pref_key_remote_server_prod).apply {
+-            isVisible = true
+-            isChecked = context.settings().useProductionRemoteSettingsServer
+-            onPreferenceChangeListener = object : SharedPreferenceUpdater() {
+-                override fun onPreferenceChange(preference: Preference, newValue: Any?): Boolean {
+-                    val service =
+-                        context.components.remoteSettingsService.value.remoteSettingsService
+-                    service.updateConfig(
+-                        RemoteSettingsServerConfig(
+-                            server = if (newValue as? Boolean == true) {
+-                                RemoteSettingsServer.Prod.into()
+-                            } else {
+-                                RemoteSettingsServer.Stage.into()
+-                            },
+-                        ).into(),
+-                    )
+-                    service.sync()
+-                    return super.onPreferenceChange(preference, newValue)
+-                }
+-            }
+-        }
 -
--    private fun randomString(length: Int = random.nextInt(from = 3, until = 11)) =
--        random.nextAlphanumericString(
--            length = length,
--        )
- }
-diff -r 0a6479ef0332 mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/topsites/TopSiteItemViewHolder.kt
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/topsites/TopSiteItemViewHolder.kt	Mon Nov 18 12:58:35 2024 +0000
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/topsites/TopSiteItemViewHolder.kt	Tue Nov 19 10:17:20 2024 +0300
-@@ -161,6 +161,12 @@
-                 SupportUtils.MEITUAN_URL -> {
-                     binding.faviconImage.setImageDrawable(getDrawable(itemView.context, R.drawable.ic_meituan))
-                 }
-+                SupportUtils.FDROID_URL -> {
-+                    binding.faviconImage.setImageDrawable(getDrawable(itemView.context, R.drawable.ic_fdroid))
-+                }
-+                SupportUtils.EFF_URL -> {
-+                    binding.faviconImage.setImageDrawable(getDrawable(itemView.context, R.drawable.ic_eff))
-+                }
-                 else -> {
-                     itemView.context.components.core.icons.loadIntoView(binding.faviconImage, topSite.url)
-                 }
-diff -r 0a6479ef0332 mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt	Mon Nov 18 12:58:35 2024 +0000
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt	Tue Nov 19 10:17:20 2024 +0300
-@@ -39,6 +39,8 @@
-     const val GOOGLE_XX_URL = "https://www.google.com/webhp?client=firefox-b-m&channel=ts"
+         requirePreference<SwitchPreference>(R.string.pref_key_use_remote_search_configuration).apply {
+             isVisible = true
+             isChecked = context.settings().useRemoteSearchConfiguration
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
+index 6ca1dca238cb..169849c0d1aa 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
+@@ -30,6 +30,8 @@ object SupportUtils {
      const val WHATS_NEW_URL = "https://www.mozilla.org/firefox/android/notes"
      const val FXACCOUNT_SUMO_URL = "https://support.mozilla.org/kb/access-mozilla-services-firefox-account"
+     const val ANDROID_SUPPORT_SUMO_URL = "mzl.la/AndroidSupport"
 +    const val FDROID_URL = "https://f-droid.org/"
 +    const val EFF_URL = "https://www.eff.org/"
  
      // This is locale-less on purpose so that the content negotiation happens on the AMO side because the current
      // user language might not be supported by AMO and/or the language might not be exactly what AMO is expecting
-diff -r 0a6479ef0332 mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt	Mon Nov 18 12:58:35 2024 +0000
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt	Tue Nov 19 10:17:20 2024 +0300
-@@ -340,7 +340,7 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+index 6ef1bc0ace33..c6fbe34446e4 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+@@ -166,8 +166,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+     private val logger = Logger("Settings")
  
-     var isTelemetryEnabled by booleanPreference(
-         appContext.getPreferenceKey(R.string.pref_key_telemetry),
--        default = true,
-+        default = false,
-     )
+     @VisibleForTesting
+-    internal val isCrashReportEnabledInBuild: Boolean =
+-        BuildConfig.CRASH_REPORTING && Config.channel.isReleased
++    internal val isCrashReportEnabledInBuild: Boolean = false
  
-     var isMarketingTelemetryEnabled by booleanPreference(
-@@ -350,7 +350,7 @@
- 
-     var isExperimentationEnabled by booleanPreference(
-         appContext.getPreferenceKey(R.string.pref_key_experimentation_v2),
--        default = isTelemetryEnabled,
-+        default = false,
-     )
- 
-     var isOverrideTPPopupsForPerformanceTest = false
-@@ -1617,7 +1617,7 @@
-     var showPocketRecommendationsFeature by lazyFeatureFlagPreference(
-         appContext.getPreferenceKey(R.string.pref_key_pocket_homescreen_recommendations),
-         featureFlag = FeatureFlags.isPocketRecommendationsFeatureEnabled(appContext),
--        default = { homescreenSections[HomeScreenSection.POCKET] == true },
-+        default = { false },
-     )
- 
+     override val preferences: SharedPreferences =
+         appContext.getSharedPreferences(FENIX_PREFERENCES, MODE_PRIVATE)
+@@ -193,20 +192,12 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
-@@ -1683,7 +1683,7 @@
+      * Indicates if the stories homescreen section should be shown.
       */
-     var showContileFeature by booleanPreference(
-         key = appContext.getPreferenceKey(R.string.pref_key_enable_contile),
--        default = true,
-+        default = false,
-     )
+-    var showPocketRecommendationsFeature by lazyFeatureFlagPreference(
+-        appContext.getPreferenceKey(R.string.pref_key_pocket_homescreen_recommendations),
+-        featureFlag = ContentRecommendationsFeatureHelper.isContentRecommendationsFeatureEnabled(appContext),
+-        default = { homescreenSections[HomeScreenSection.POCKET] == true },
+-    )
++    var showPocketRecommendationsFeature = false
  
      /**
-diff -r 0a6479ef0332 mobile/android/fenix/app/src/main/res/values/static_strings_extra.xml
---- /dev/null	Thu Jan 01 00:00:00 1970 +0000
-+++ b/mobile/android/fenix/app/src/main/res/values/static_strings_extra.xml	Tue Nov 19 10:17:20 2024 +0300
+      * Indicates if the Pocket recommendations homescreen section should also show sponsored stories.
+      */
+-    val showPocketSponsoredStories by lazyFeatureFlagPreference(
+-        key = appContext.getPreferenceKey(R.string.pref_key_pocket_sponsored_stories),
+-        default = { homescreenSections[HomeScreenSection.POCKET_SPONSORED_STORIES] == true },
+-        featureFlag = ContentRecommendationsFeatureHelper.isPocketSponsoredStoriesFeatureEnabled(appContext),
+-    )
++    val showPocketSponsoredStories = false
+ 
+     /**
+      * Indicates whether or not the "Recently Visited" section should be shown on the home screen.
+@@ -503,12 +494,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+         default = true,
+     )
+ 
+-    val isCrashReportingEnabled: Boolean
+-        get() = isCrashReportEnabledInBuild &&
+-            preferences.getBoolean(
+-                appContext.getPreferenceKey(R.string.pref_key_crash_reporter),
+-                true,
+-            )
++    val isCrashReportingEnabled: Boolean = false
+ 
+     var crashReportChoice by stringPreference(
+         appContext.getPreferenceKey(R.string.pref_key_crash_reporting_choice),
+@@ -520,20 +506,11 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+         default = false,
+     )
+ 
+-    var isTelemetryEnabled by booleanPreference(
+-        appContext.getPreferenceKey(R.string.pref_key_telemetry),
+-        default = true,
+-    )
++    var isTelemetryEnabled = false
+ 
+-    var isMarketingTelemetryEnabled by booleanPreference(
+-        appContext.getPreferenceKey(R.string.pref_key_marketing_telemetry),
+-        default = false,
+-    )
++    var isMarketingTelemetryEnabled = false
+ 
+-    var hasMadeMarketingTelemetrySelection by booleanPreference(
+-        appContext.getPreferenceKey(R.string.pref_key_marketing_telemetry_selection_made),
+-        default = false,
+-    )
++    var hasMadeMarketingTelemetrySelection = false
+ 
+     var hasAcceptedTermsOfService by booleanPreference(
+         appContext.getPreferenceKey(R.string.pref_key_terms_accepted),
+@@ -611,16 +588,9 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+      * sure that users who upgrade and had telemetry disabled don't start sending the
+      * daily usage ping telemetry.
+      */
+-    var isDailyUsagePingEnabled by booleanPreference(
+-        appContext.getPreferenceKey(R.string.pref_key_daily_usage_ping),
+-        default = isTelemetryEnabled,
+-        persistDefaultIfNotExists = true,
+-    )
++    var isDailyUsagePingEnabled = false
+ 
+-    var isExperimentationEnabled by booleanPreference(
+-        appContext.getPreferenceKey(R.string.pref_key_experimentation_v2),
+-        default = isTelemetryEnabled,
+-    )
++    var isExperimentationEnabled = false
+ 
+     /**
+      * This lets us know if the user has disabled experimentation manually so that we know
+@@ -2048,10 +2018,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+     /**
+      * Indicates if the Contile functionality should be visible.
+      */
+-    var showContileFeature by booleanPreference(
+-        key = appContext.getPreferenceKey(R.string.pref_key_enable_contile),
+-        default = true,
+-    )
++    var showContileFeature = false
+ 
+     /**
+      * Indicates if the Unified Search feature should be visible.
+diff --git a/mobile/android/fenix/app/src/main/res/values/static_strings_extra.xml b/mobile/android/fenix/app/src/main/res/values/static_strings_extra.xml
+new file mode 100644
+index 000000000000..101f4e0d0a90
+--- /dev/null
++++ b/mobile/android/fenix/app/src/main/res/values/static_strings_extra.xml
 @@ -0,0 +1,8 @@
 +<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 +<!-- This Source Code Form is subject to the terms of the Mozilla Public
@@ -1045,10 +1153,43 @@ diff -r 0a6479ef0332 mobile/android/fenix/app/src/main/res/values/static_strings
 +    <string name="default_top_site_fdroid" translatable="false">F-Droid</string>
 +    <string name="default_top_site_eff" translatable="false">EFF</string>
 +</resources>
-diff -r 0a6479ef0332 mobile/android/fenix/app/src/main/res/xml/preferences.xml
---- a/mobile/android/fenix/app/src/main/res/xml/preferences.xml	Mon Nov 18 12:58:35 2024 +0000
-+++ b/mobile/android/fenix/app/src/main/res/xml/preferences.xml	Tue Nov 19 10:17:20 2024 +0300
-@@ -139,11 +139,6 @@
+diff --git a/mobile/android/fenix/app/src/main/res/xml/home_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/home_preferences.xml
+index 4fd1f8945ae2..9d6da836cf30 100644
+--- a/mobile/android/fenix/app/src/main/res/xml/home_preferences.xml
++++ b/mobile/android/fenix/app/src/main/res/xml/home_preferences.xml
+@@ -13,7 +13,8 @@
+         android:dependency="@string/pref_key_show_top_sites"
+         android:layout="@layout/checkbox_left_sub_preference"
+         android:key="@string/pref_key_enable_contile"
+-        android:title="@string/customize_toggle_contile" />
++        android:title="@string/customize_toggle_contile"
++        app:isPreferenceVisible="false" />
+ 
+     <androidx.preference.SwitchPreference
+         android:key="@string/pref_key_recent_tabs"
+@@ -29,13 +30,15 @@
+ 
+     <androidx.preference.SwitchPreference
+         android:key="@string/pref_key_pocket_homescreen_recommendations"
+-        android:title="@string/customize_toggle_pocket_3" />
++        android:title="@string/customize_toggle_pocket_3"
++        app:isPreferenceVisible="false" />
+ 
+     <androidx.preference.CheckBoxPreference
+         android:dependency="@string/pref_key_pocket_homescreen_recommendations"
+         android:layout="@layout/checkbox_left_sub_preference"
+         android:key="@string/pref_key_pocket_sponsored_stories"
+-        android:title="@string/customize_toggle_pocket_sponsored" />
++        android:title="@string/customize_toggle_pocket_sponsored"
++        app:isPreferenceVisible="false" />
+ 
+     <androidx.preference.Preference
+         android:key="@string/pref_key_wallpapers"
+diff --git a/mobile/android/fenix/app/src/main/res/xml/preferences.xml b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
+index 159944ab7d38..d3480d93a5b2 100644
+--- a/mobile/android/fenix/app/src/main/res/xml/preferences.xml
++++ b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
+@@ -141,11 +141,6 @@
              app:iconSpaceReserved="false"
              android:title="@string/preferences_notifications" />
  
@@ -1060,32 +1201,35 @@ diff -r 0a6479ef0332 mobile/android/fenix/app/src/main/res/xml/preferences.xml
      </androidx.preference.PreferenceCategory>
  
      <PreferenceCategory
-@@ -201,11 +196,6 @@
+@@ -206,11 +201,6 @@
+         android:title="@string/preferences_category_about"
          app:iconSpaceReserved="false"
          android:layout="@layout/preference_category_no_icon_style">
-         <androidx.preference.Preference
+-        <androidx.preference.Preference
 -            android:key="@string/pref_key_rate"
 -            app:iconSpaceReserved="false"
 -            android:title="@string/preferences_rate" />
 -
--        <androidx.preference.Preference
+         <androidx.preference.Preference
              android:key="@string/pref_key_about"
              app:iconSpaceReserved="false"
-             android:title="@string/preferences_about" />
-diff -r 0a6479ef0332 mobile/android/fenix/app/src/main/res/xml/site_permissions_details_exceptions_preferences.xml
---- a/mobile/android/fenix/app/src/main/res/xml/site_permissions_details_exceptions_preferences.xml	Mon Nov 18 12:58:35 2024 +0000
-+++ b/mobile/android/fenix/app/src/main/res/xml/site_permissions_details_exceptions_preferences.xml	Tue Nov 19 10:17:20 2024 +0300
-@@ -3,7 +3,8 @@
-    - License, v. 2.0. If a copy of the MPL was not distributed with this
-    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
- <androidx.preference.PreferenceScreen
--        xmlns:android="http://schemas.android.com/apk/res/android">
-+        xmlns:android="http://schemas.android.com/apk/res/android"
-+        xmlns:app="http://schemas.android.com/apk/res-auto">
-     <androidx.preference.Preference
-             android:icon="@drawable/ic_camera_enabled"
-             android:key="@string/pref_key_phone_feature_camera"
-@@ -44,7 +45,8 @@
+diff --git a/mobile/android/fenix/app/src/main/res/xml/secret_settings_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/secret_settings_preferences.xml
+index e8059b6aea0b..a0747129882e 100644
+--- a/mobile/android/fenix/app/src/main/res/xml/secret_settings_preferences.xml
++++ b/mobile/android/fenix/app/src/main/res/xml/secret_settings_preferences.xml
+@@ -138,6 +138,7 @@
+     <SwitchPreference
+         android:key="@string/pref_key_remote_server_prod"
+         app:iconSpaceReserved="false"
++        app:isPreferenceVisible="false"
+         android:title="@string/preferences_debug_settings_remote_settings_server"
+         />
+     <SwitchPreference
+diff --git a/mobile/android/fenix/app/src/main/res/xml/site_permissions_details_exceptions_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/site_permissions_details_exceptions_preferences.xml
+index dfe2d28572f2..54a99d9e1dc5 100644
+--- a/mobile/android/fenix/app/src/main/res/xml/site_permissions_details_exceptions_preferences.xml
++++ b/mobile/android/fenix/app/src/main/res/xml/site_permissions_details_exceptions_preferences.xml
+@@ -44,7 +44,8 @@
          android:icon="@drawable/ic_link"
          android:key="@string/pref_key_browser_feature_media_key_system_access"
          android:title="@string/preference_phone_feature_media_key_system_access"
@@ -1095,10 +1239,11 @@ diff -r 0a6479ef0332 mobile/android/fenix/app/src/main/res/xml/site_permissions_
  
      <androidx.preference.Preference
          android:icon="@drawable/ic_autoplay"
-diff -r 0a6479ef0332 mobile/android/fenix/app/src/main/res/xml/site_permissions_preferences.xml
---- a/mobile/android/fenix/app/src/main/res/xml/site_permissions_preferences.xml	Mon Nov 18 12:58:35 2024 +0000
-+++ b/mobile/android/fenix/app/src/main/res/xml/site_permissions_preferences.xml	Tue Nov 19 10:17:20 2024 +0300
-@@ -81,6 +81,7 @@
+diff --git a/mobile/android/fenix/app/src/main/res/xml/site_permissions_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/site_permissions_preferences.xml
+index d224eedd7c87..2d1fc926bb34 100644
+--- a/mobile/android/fenix/app/src/main/res/xml/site_permissions_preferences.xml
++++ b/mobile/android/fenix/app/src/main/res/xml/site_permissions_preferences.xml
+@@ -73,6 +73,7 @@
              android:key="@string/pref_key_browser_feature_media_key_system_access"
              android:title="@string/preference_phone_feature_media_key_system_access"
              android:summary="@string/preference_option_phone_feature_ask_to_allow"
@@ -1106,38 +1251,16 @@ diff -r 0a6479ef0332 mobile/android/fenix/app/src/main/res/xml/site_permissions_
              app:allowDividerBelow="true"/>
  
          <androidx.preference.Preference
-diff -r 0a6479ef0332 mobile/android/fenix/plugins/fenixdependencies/src/main/java/FenixDependenciesPlugin.kt
---- a/mobile/android/fenix/plugins/fenixdependencies/src/main/java/FenixDependenciesPlugin.kt	Mon Nov 18 12:58:35 2024 +0000
-+++ b/mobile/android/fenix/plugins/fenixdependencies/src/main/java/FenixDependenciesPlugin.kt	Tue Nov 19 10:17:20 2024 +0300
-@@ -12,17 +12,6 @@
-     override fun apply(settings: Settings) = Unit
- }
+diff --git a/mobile/android/focus-android/app/build.gradle b/mobile/android/focus-android/app/build.gradle
+index ad61a6834166..6c9ddc8fa105 100644
+--- a/mobile/android/focus-android/app/build.gradle
++++ b/mobile/android/focus-android/app/build.gradle
+@@ -331,8 +331,6 @@ dependencies {
+     implementation libs.google.material
+     implementation libs.kotlinx.coroutines
+     implementation libs.mozilla.glean
+-    implementation libs.play.review
+-    implementation libs.play.review.ktx
+     implementation libs.sentry
  
--object FenixVersions {
--    const val adjust = "4.38.2"
--    const val installreferrer = "2.2"
--}
--
--@Suppress("unused")
--object FenixDependencies {
--    const val adjust = "com.adjust.sdk:adjust-android:${FenixVersions.adjust}"
--    const val installreferrer = "com.android.installreferrer:installreferrer:${FenixVersions.installreferrer}"
--}
--
- /**
-  * Functionality to limit specific dependencies to specific repositories. These are typically expected to be used by
-  * dependency group name (i.e. with `include/excludeGroup`). For additional info, see:
-diff -r 0a6479ef0332 mobile/android/focus-android/app/build.gradle
---- a/mobile/android/focus-android/app/build.gradle	Mon Nov 18 12:58:35 2024 +0000
-+++ b/mobile/android/focus-android/app/build.gradle	Tue Nov 19 10:17:20 2024 +0300
-@@ -266,10 +266,6 @@
-     implementation ComponentsDependencies.androidx_transition
-     implementation ComponentsDependencies.androidx_work_runtime
- 
--    // Required for in-app reviews
--    implementation ComponentsDependencies.play_review
--    implementation ComponentsDependencies.play_review_ktx
--
-     implementation ComponentsDependencies.google_material
- 
-     implementation ComponentsDependencies.thirdparty_sentry
+     debugImplementation libs.leakcanary

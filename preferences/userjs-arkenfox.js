@@ -8,9 +8,6 @@
 
 * README:
 
-  0. Changes made for Brace and Mull are noted with //BRACE and //MULL respectively
-       * sed -i 's/pref(/user_pref(/' userjs-arkenfox.js
-       * sed -i 's/pref(/pref(/' userjs-arkenfox.js
   1. Consider using Tor Browser if it meets your needs or fits your threat model
        * https://2019.www.torproject.org/about/torusers.html
   2. Read the entire wiki
@@ -346,7 +343,7 @@ pref("browser.formfill.enable", false);
  * [3] https://bugzilla.mozilla.org/1632765
  * [4] https://earthlng.github.io/testpages/visited_links.html (see github wiki APPENDIX A on how to use)
  * [5] https://lcamtuf.blogspot.com/2016/08/css-mix-blend-mode-is-bad-for-keeping.html ***/
-pref("layout.css.visited_links_enabled", false); //BRACE-UNCOMMENTED: nice to have disabled
+   // pref("layout.css.visited_links_enabled", false);
 /* 0830: enable separate default search engine in Private Windows and its UI setting
  * [SETTING] Search>Default Search Engine>Choose a different default search engine for Private Windows only ***/
 pref("browser.search.separatePrivateDefault", true); // [FF70+]
@@ -381,7 +378,7 @@ pref("_user.js.parrot", "1000 syntax error: the parrot's gone to meet 'is maker!
 /* 1001: disable disk cache
  * [NOTE] We also clear cache on exit (2811)
  * [SETUP-CHROME] If you think disk cache helps perf, then feel free to override this ***/
-   // pref("browser.cache.disk.enable", false); //BRACE-COMMENTED: caches are important, bandwidth available can be limited (data plans or slow network)
+pref("browser.cache.disk.enable", false);
 /* 1002: disable media cache from writing to disk in Private Browsing
  * [NOTE] MSE (Media Source Extensions) are already stored in-memory in PB ***/
 pref("browser.privatebrowsing.forceMediaMemoryCache", true); // [FF75+]
@@ -603,7 +600,7 @@ pref("browser.contentanalysis.default_result", 0); // [FF127+] [DEFAULT: 0]
 /* 2651: enable user interaction for security by always asking where to download
  * [SETUP-CHROME] On Android this blocks longtapping and saving images
  * [SETTING] General>Downloads>Always ask you where to save files ***/
-   // pref("browser.download.useDownloadDir", false); //MULL-COMMENTED: breakage, see note above
+pref("browser.download.useDownloadDir", false);
 /* 2652: disable downloads panel opening on every download [FF96+] ***/
 pref("browser.download.alwaysOpenPanel", false);
 /* 2653: disable adding downloads to the system's "recent documents" list ***/
@@ -618,7 +615,7 @@ pref("browser.download.always_ask_before_handling_new_types", true);
  * The pref value represents the sum: e.g. 5 would be profile and application directories
  * [SETUP-CHROME] Breaks usage of files which are installed outside allowed directories
  * [1] https://archive.is/DYjAM ***/
-   // pref("extensions.enabledScopes", 5); // [HIDDEN PREF] //BRACE-COMMENTED: brace-installer-base adds system packages for add-ons (uBlock Origin)
+pref("extensions.enabledScopes", 5); // [HIDDEN PREF]
    // pref("extensions.autoDisableScopes", 15); // [DEFAULT: 15]
 /* 2661: disable bypassing 3rd party extension install prompts [FF82+]
  * [1] https://bugzilla.mozilla.org/buglist.cgi?bug_id=1659530,1681331 ***/
@@ -649,9 +646,9 @@ pref("browser.contentblocking.category", "strict"); // [HIDDEN PREF]
 pref("_user.js.parrot", "2800 syntax error: the parrot's bleedin' demised!");
 /* 2810: enable Firefox to clear items on shutdown
  * [NOTE] In FF129+ clearing "siteSettings" on shutdown (2811), or manually via site data (2820) and
- * via history (2830), will no longer remove sanitize on shutdown "cookie and site data" site exceptions (2815)
+ * via history (2830), will no longer remove sanitize on shutdown "cookie and site data" site exceptions (2815) 
  * [SETTING] Privacy & Security>History>Custom Settings>Clear history when Firefox closes | Settings ***/
-pref("privacy.sanitize.sanitizeOnShutdown", false); //BRACE-DISABLED: usability, this ain't Tor Browser
+pref("privacy.sanitize.sanitizeOnShutdown", true);
 
 /** SANITIZE ON SHUTDOWN: IGNORES "ALLOW" SITE EXCEPTIONS | v2 migration is FF128+ ***/
 /* 2811: set/enforce what items to clear on shutdown (if 2810 is true) [SETUP-CHROME]
@@ -818,7 +815,7 @@ pref("_user.js.parrot", "4500 syntax error: the parrot's popped 'is clogs");
  * [NOTE] pbmode applies if true and the original pref is false
  * [SETUP-WEB] RFP can cause some website breakage: mainly canvas, use a canvas site exception via the urlbar.
  * RFP also has a few side effects: mainly that timezone is GMT, and websites will prefer light theme ***/
-pref("privacy.resistFingerprinting", true); // [FF41+] //BRACE-UNCOMMENTED
+   // pref("privacy.resistFingerprinting", true); // [FF41+]
    // pref("privacy.resistFingerprinting.pbmode", true); // [FF114+]
 /* 4502: set RFP new window size max rounded values [FF55+]
  * [SETUP-CHROME] sizes round down in hundreds: width to 200s and height to 100s, to fit your screen
@@ -828,7 +825,7 @@ pref("privacy.window.maxInnerHeight", 900);
 /* 4503: disable mozAddonManager Web API [FF57+]
  * [NOTE] To allow extensions to work on AMO, you also need 2662
  * [1] https://bugzilla.mozilla.org/buglist.cgi?bug_id=1384330,1406795,1415644,1453988 ***/
-pref("privacy.resistFingerprinting.block_mozAddonManager", false); //MULL-MODIFIED: set to false to unbreak AMO
+pref("privacy.resistFingerprinting.block_mozAddonManager", true);
 /* 4504: enable letterboxing [FF67+]
  * Dynamically resizes the inner window by applying margins in stepped ranges [2]
  * If you use the dimension pref, then it will only apply those resolutions.
@@ -838,7 +835,7 @@ pref("privacy.resistFingerprinting.block_mozAddonManager", false); //MULL-MODIFI
  * [WARNING] DO NOT USE: the dimension pref is only meant for testing
  * [1] https://bugzilla.mozilla.org/1407366
  * [2] https://hg.mozilla.org/mozilla-central/rev/6d2d7856e468#l2.32 ***/
-pref("privacy.resistFingerprinting.letterboxing", true); // [HIDDEN PREF] //BRACE-UNCOMMENTED
+   // pref("privacy.resistFingerprinting.letterboxing", true); // [HIDDEN PREF]
    // pref("privacy.resistFingerprinting.letterboxing.dimensions", ""); // [HIDDEN PREF]
 /* 4505: disable RFP by domain [FF91+] ***/
    // pref("privacy.resistFingerprinting.exemptedDomains", "*.example.invalid");
@@ -863,7 +860,7 @@ pref("browser.link.open_newwindow", 3); // [DEFAULT: 3]
  * [1] https://searchfox.org/mozilla-central/source/dom/tests/browser/browser_test_new_window_from_content.js ***/
 pref("browser.link.open_newwindow.restriction", 0);
 /* 4520: disable WebGL (Web Graphics Library) ***/
-pref("webgl.disabled", true); //BRACE-UNCOMMENTED
+   // pref("webgl.disabled", true);
 
 /*** [SECTION 5000]: OPTIONAL OPSEC
    Disk avoidance, application data isolation, eyeballs...
@@ -910,7 +907,7 @@ pref("_user.js.parrot", "5000 syntax error: the parrot's taken 'is last bow");
 /* 5009: disable "open with" in download dialog [FF50+]
  * Application data isolation [1]
  * [1] https://bugzilla.mozilla.org/1281959 ***/
-pref("browser.download.forbid_open_with", true); //BRACE-UNCOMMENTED: brace-installer-base installs firejail, without this would cause confusion
+   // pref("browser.download.forbid_open_with", true);
 /* 5010: disable location bar suggestion types
  * [SETTING] Search>Address Bar>When using the address bar, suggest ***/
    // pref("browser.urlbar.suggest.history", false);
@@ -963,28 +960,27 @@ pref("browser.download.forbid_open_with", true); //BRACE-UNCOMMENTED: brace-inst
 pref("_user.js.parrot", "5500 syntax error: this is an ex-parrot!");
 /* 5501: disable MathML (Mathematical Markup Language) [FF51+]
  * [1] https://cve.mitre.org/cgi-bin/cvekey.cgi?keyword=mathml ***/
-pref("mathml.disabled", true); // 1173199 //BRACE-UNCOMMENTED: attack surface reduction
+   // pref("mathml.disabled", true); // 1173199
 /* 5502: disable in-content SVG (Scalable Vector Graphics) [FF53+]
  * [1] https://cve.mitre.org/cgi-bin/cvekey.cgi?keyword=firefox+svg ***/
    // pref("svg.disabled", true); // 1216893
 /* 5503: disable graphite
  * [1] https://cve.mitre.org/cgi-bin/cvekey.cgi?keyword=firefox+graphite
  * [2] https://en.wikipedia.org/wiki/Graphite_(SIL) ***/
-pref("gfx.font_rendering.graphite.enabled", false); //BRACE-UNCOMMENTED: attack surface reduction
+   // pref("gfx.font_rendering.graphite.enabled", false);
 /* 5504: disable asm.js [FF22+]
  * [1] http://asmjs.org/
  * [2] https://cve.mitre.org/cgi-bin/cvekey.cgi?keyword=asm.js
  * [3] https://rh0dev.github.io/blog/2017/the-return-of-the-jit/ ***/
-pref("javascript.options.asmjs", false); //BRACE-UNCOMMENTED: attack surface reduction
+   // pref("javascript.options.asmjs", false);
 /* 5505: disable Ion and baseline JIT to harden against JS exploits [RESTART]
  * [NOTE] When both Ion and JIT are disabled, and trustedprincipals
  * is enabled, then Ion can still be used by extensions (1599226)
  * [1] https://cve.mitre.org/cgi-bin/cvekey.cgi?keyword=firefox+jit
  * [2] https://microsoftedge.github.io/edgevr/posts/Super-Duper-Secure-Mode/ ***/
-pref("javascript.options.ion", false); //BRACE-UNCOMMENTED: attack surface reduction
-pref("javascript.options.baselinejit", false); //BRACE-UNCOMMENTED: attack surface reduction
-pref("javascript.options.native_regexp", false); //BRACE-ADDED: attack surface reduction
-pref("javascript.options.jit_trustedprincipals", true); // [FF75+] [HIDDEN PREF]//BRACE-UNCOMMENTED: attack surface reduction
+   // pref("javascript.options.ion", false);
+   // pref("javascript.options.baselinejit", false);
+   // pref("javascript.options.jit_trustedprincipals", true); // [FF75+] [HIDDEN PREF]
 /* 5506: disable WebAssembly [FF52+]
  * Vulnerabilities [1] have increasingly been found, including those known and fixed
  * in native programs years ago [2]. WASM has powerful low-level access, making
@@ -993,16 +989,16 @@ pref("javascript.options.jit_trustedprincipals", true); // [FF75+] [HIDDEN PREF]
  * [1] https://cve.mitre.org/cgi-bin/cvekey.cgi?keyword=wasm
  * [2] https://spectrum.ieee.org/tech-talk/telecom/security/more-worries-over-the-security-of-web-assembly
  * [3] https://www.zdnet.com/article/half-of-the-websites-using-webassembly-use-it-for-malicious-purposes ***/
-pref("javascript.options.wasm", false); //BRACE-UNCOMMENTED: attack surface reduction
+   // pref("javascript.options.wasm", false);
 /* 5507: disable rendering of SVG OpenType fonts ***/
-pref("gfx.font_rendering.opentype_svg.enabled", false); //BRACE-UNCOMMENTED: attack surface reduction
+   // pref("gfx.font_rendering.opentype_svg.enabled", false);
 /* 5508: disable all DRM content (EME: Encryption Media Extension)
  * Optionally hide the UI setting which also disables the DRM prompt
  * [SETTING] General>DRM Content>Play DRM-controlled content
  * [TEST] https://bitmovin.com/demos/drm
  * [1] https://www.eff.org/deeplinks/2017/10/drms-dead-canary-how-we-just-lost-web-what-we-learned-it-and-what-we-need-do-next ***/
-pref("media.eme.enabled", false); //BRACE-UNCOMMENTED: proprietary
-pref("browser.eme.ui.enabled", false);
+   // pref("media.eme.enabled", false);
+   // pref("browser.eme.ui.enabled", false);
 /* 5509: disable IPv6 if using a VPN
  * This is an application level fallback. Disabling IPv6 is best done at an OS/network
  * level, and/or configured properly in system wide VPN setups.
@@ -1014,7 +1010,7 @@ pref("browser.eme.ui.enabled", false);
 /* 5510: control when to send a cross-origin referer
  * 0=always (default), 1=only if base domains match, 2=only if hosts match
  * [NOTE] Will cause breakage: older modems/routers and some sites e.g banks, vimeo, icloud, instagram ***/
-pref("network.http.referer.XOriginPolicy", 2); //BRACE-UNCOMMENTED: nice to have
+   // pref("network.http.referer.XOriginPolicy", 2);
 /* 5511: set DoH bootstrap address [FF89+]
  * Firefox uses the system DNS to initially resolve the IP address of your DoH server.
  * When set to a valid, working value that matches your "network.trr.uri" (0712) Firefox
@@ -1036,7 +1032,7 @@ pref("security.dialog_enable_delay", 1000); // [DEFAULT: 1000]
 /* 6008: enforce no First Party Isolation [FF51+]
  * [WARNING] Replaced with network partitioning (FF85+) and TCP (2701), and enabling FPI
  * disables those. FPI is no longer maintained except at Tor Project for Tor Browser's config ***/
-pref("privacy.firstparty.isolate", true); // [DEFAULT: false] //MULL-ENABLED: dFPI needs to be tested
+pref("privacy.firstparty.isolate", false); // [DEFAULT: false]
 /* 6009: enforce SmartBlock shims (about:compat) [FF81+]
  * [1] https://blog.mozilla.org/security/2021/03/23/introducing-smartblock/ ***/
 pref("extensions.webcompat.enable_shims", true); // [HIDDEN PREF] [DEFAULT: true]
@@ -1139,17 +1135,16 @@ pref("_user.js.parrot", "7000 syntax error: the parrot's pushing up daisies!");
 /* 7016: customize ETP settings
  * [NOTE] FPP (fingerprintingProtection) is ignored when RFP (4501) is enabled
  * [WHY] Arkenfox only supports strict (2701) which sets these at runtime ***/
-pref("network.cookie.cookieBehavior", 1); // [DEFAULT: 5] //BRACE-UNCOMMENTED: strict cannot be set on first launch, use custom + enterprise policy instead //MULL-MODIFIED: set to 1 for FPI
-pref("privacy.fingerprintingProtection", true); // [FF114+] [ETP FF119+]
-pref("network.http.referer.disallowCrossSiteRelaxingDefault", true);
-pref("network.http.referer.disallowCrossSiteRelaxingDefault.top_navigation", true); // [FF100+]
-pref("privacy.partition.network_state.ocsp_cache", true); // [DEFAULT: true FF123+]
-pref("privacy.query_stripping.enabled", true); // [FF101+]
-pref("privacy.trackingprotection.enabled", true);
-pref("privacy.trackingprotection.socialtracking.enabled", true);
-pref("privacy.trackingprotection.cryptomining.enabled", true); // [DEFAULT: true]
-pref("privacy.trackingprotection.fingerprinting.enabled", true); // [DEFAULT: true]
-pref("privacy.trackingprotection.emailtracking.enabled", true); //BRACE-ADDED
+   // pref("network.cookie.cookieBehavior", 5); // [DEFAULT: 5]
+   // pref("privacy.fingerprintingProtection", true); // [FF114+] [ETP FF119+]
+   // pref("network.http.referer.disallowCrossSiteRelaxingDefault", true);
+   // pref("network.http.referer.disallowCrossSiteRelaxingDefault.top_navigation", true); // [FF100+]
+   // pref("privacy.partition.network_state.ocsp_cache", true); // [DEFAULT: true FF123+]
+   // pref("privacy.query_stripping.enabled", true); // [FF101+]
+   // pref("privacy.trackingprotection.enabled", true);
+   // pref("privacy.trackingprotection.socialtracking.enabled", true);
+   // pref("privacy.trackingprotection.cryptomining.enabled", true); // [DEFAULT: true]
+   // pref("privacy.trackingprotection.fingerprinting.enabled", true); // [DEFAULT: true]
 /* 7017: disable service workers
  * [WHY] Already isolated with TCP (2701) behind a pref (2710) ***/
    // pref("dom.serviceWorkers.enabled", false);
@@ -1168,11 +1163,11 @@ pref("privacy.trackingprotection.emailtracking.enabled", true); //BRACE-ADDED
  * [TEST] https://browserleaks.com/webrtc
  * [1] https://groups.google.com/g/discuss-webrtc/c/6stQXi72BEU/m/2FwZd24UAQAJ
  * [2] https://datatracker.ietf.org/doc/html/draft-ietf-mmusic-mdns-ice-candidates#section-3.1.1 ***/
-pref("media.peerconnection.enabled", false); //MULL-UNCOMMENTED: Fenix doesn't protect local IP addreses like desktop does
+   // pref("media.peerconnection.enabled", false);
 /* 7021: enable GPC (Global Privacy Control) in non-PB windows
  * [WHY] Passive and active fingerprinting. Mostly redundant with Tracking Protection
  * in ETP Strict (2701) and sanitizing on close (2800s) ***/
-pref("privacy.globalprivacycontrol.enabled", true); //BRACE-ENABLED: GPC does have legal affordances in select regions
+   // pref("privacy.globalprivacycontrol.enabled", true);
 
 /*** [SECTION 8000]: DON'T BOTHER: FINGERPRINTING
    [WHY] They are insufficient to help anti-fingerprinting and do more harm than good
