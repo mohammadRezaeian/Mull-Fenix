@@ -83,10 +83,14 @@ sed -i -e '/CRASH_REPORTING/s/true/false/' app/build.gradle
 sed -i -e '/TELEMETRY/s/true/false/' app/build.gradle
 
 # Let it be Mull
-sed -i \
-    -e 's/Firefox Daylight/Mull/; s/Firefox/Mull/g' \
-    -e '/about_content/s/Mozilla/Divested Computing Group/' \
-    app/src/*/res/values*/*strings.xml
+# sed -i \
+#     -e 's/Firefox Daylight/Mull/; s/Firefox/Mull/g' \
+#     -e '/about_content/s/Mozilla/Divested Computing Group/' \
+#     app/src/*/res/values*/*strings.xml
+
+# Let it be Fennec
+sed -i -e 's/Firefox Daylight/Fennec/; s/Firefox/Fennec/g' \
+
 
 # Fenix uses reflection to create a instance of profile based on the text of
 # the label, see
@@ -192,7 +196,7 @@ popd
 
 pushd "$application_services"
 # Break the dependency on older A-C
-sed -i -e '/android-components = /s/131\.0\.2/133.0.3/' gradle/libs.versions.toml
+sed -i -e '/android-components = /s/"143\.0"/"145.0"/' gradle/libs.versions.toml
 echo "rust.targets=linux-x86-64,$rusttarget" >> local.properties
 sed -i -e '/NDK ez-install/,/^$/d' libs/verify-android-ci-environment.sh
 sed -i -e '/content {/,/}/d' build.gradle
