@@ -55,7 +55,7 @@ pushd "$fenix"
 sed -i \
     -e 's|applicationId "org.mozilla"|applicationId "us.spotco"|' \
     -e 's|applicationIdSuffix ".firefox"|applicationIdSuffix ".fennec_dos"|' \
-    -e 's|"sharedUserId": "org.mozilla.firefox.sharedID"|"sharedUserId": "us.spotco.fennec_dos.sharedID"|' \
+    # -e 's|"sharedUserId": "org.mozilla.firefox.sharedID"|"sharedUserId": "us.spotco.fennec_dos.sharedID"|' \
     -e "s/Config.releaseVersionName(project)/'$1'/" \
     -e "s/Config.generateFennecVersionCode(arch, aab)/$2/" \
     app/build.gradle
