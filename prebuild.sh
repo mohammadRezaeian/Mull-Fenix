@@ -59,9 +59,9 @@ sed -i \
     -e "s/Config.releaseVersionName(project)/'$1'/" \
     -e "s/Config.generateFennecVersionCode(arch, aab)/$2/" \
     app/build.gradle
-sed -i \
-    -e '/android:targetPackage/s/org.mozilla.firefox/us.spotco.fennec_dos/' \
-    app/src/release/res/xml/shortcuts.xml
+# sed -i \
+#     -e '/android:targetPackage/s/org.mozilla.firefox/us.spotco.fennec_dos/' \
+#     app/src/release/res/xml/shortcuts.xml
 
 # Disable crash reporting
 sed -i -e '/CRASH_REPORTING/s/true/false/' app/build.gradle
