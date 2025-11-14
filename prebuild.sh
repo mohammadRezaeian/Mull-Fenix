@@ -39,6 +39,8 @@ function localize_maven {
     done
 }
 
+
+
 # Set up Rust
 "$rustup"/rustup-init.sh -y --no-update-default-toolchain
 # shellcheck disable=SC1090,SC1091
@@ -52,16 +54,27 @@ rustup default 1.82.0
 pushd "$fenix"
 
 # Set up the app ID, version name and version code
-sed -i \
-    -e 's|applicationId "org.mozilla"|applicationId "us.spotco"|' \
-    -e 's|applicationIdSuffix ".firefox"|applicationIdSuffix ".fennec_dos"|' \
-    # -e 's|"sharedUserId": "org.mozilla.firefox.sharedID"|"sharedUserId": "us.spotco.fennec_dos.sharedID"|' \
-    -e "s/Config.releaseVersionName(project)/'$1'/" \
-    -e "s/Config.generateFennecVersionCode(arch, aab)/$2/" \
-    app/build.gradle
+# sed -i \
+#     -e 's|applicationId "org.mozilla"|applicationId "us.spotco"|' \
+#     -e 's|applicationIdSuffix ".firefox"|applicationIdSuffix ".fennec_dos"|' \
+#     # -e 's|"sharedUserId": "org.mozilla.firefox.sharedID"|"sharedUserId": "us.spotco.fennec_dos.sharedID"|' \
+#     -e "s/Config.releaseVersionName(project)/'$1'/" \
+#     -e "s/Config.generateFennecVersionCode(arch, aab)/$2/" \
+#     app/build.gradle
 # sed -i \
 #     -e '/android:targetPackage/s/org.mozilla.firefox/us.spotco.fennec_dos/' \
 #     app/src/release/res/xml/shortcuts.xml
+
+sed -i \
+    -e 's|\.firefox|.fennec_fdroid|' \
+    -e "s/Config.releaseVersionName(project)/'$1'/" \
+    -e "s/Config.generateFennecVersionCode(abi)/$2/" \
+    app/build.gradle
+sed -i \
+    -e '/android:targetPackage/s/firefox/fennec_fdroid/' \
+    app/src/release/res/xml/shortcuts.xml
+
+
 
 # Disable crash reporting
 sed -i -e '/CRASH_REPORTING/s/true/false/' app/build.gradle
