@@ -108,15 +108,11 @@ jobs:
         mkdir -p fdroid-build
         cd fdroid-build
         
-        echo "=== Initializing fdroid repository first ==="
-        fdroid init --verbose || {
-          echo "=== Init failed ==="
-          exit 1
-        }
+        echo "=== Initializing fdroid repository ==="
+        fdroid init --verbose || { echo "Init failed"; exit 1; }
         
         mkdir -p metadata
         
-        # استفاده از بلاک خط فرمان مستقیم لینوکس بدون نیاز به EOF تداخلی
         echo "sdk_path: /opt/android-sdk" > config.yml
         echo "ndk_paths:" >> config.yml
         echo "  r25c: /opt/android-sdk/ndk" >> config.yml
@@ -159,64 +155,50 @@ jobs:
         cd fdroid-build
         mkdir -p metadata
         
-        CONFIG_SOURCE=""
-        for path in "../-fdroiddata/metadata/us.spotco.fennec_dos.yml" "./-fdroiddata/metadata/us.spotco.fennec_dos.yml"; do
-          if [ -f "$path" ]; then
-            CONFIG_SOURCE="$path"
-            break
-          fi
-        done
-        
-        if [ -n "$CONFIG_SOURCE" ]; then
-          cp "$CONFIG_SOURCE" metadata/us.spotco.fennec_dos.yml
+        ARCH_INPUT="${{ github.event.inputs.architecture }}"
+        if [ "$ARCH_INPUT" = "arm64" ]; then
+          GRADLE_TASK="assembleFenixNightlyArm64"
+        elif [ "$ARCH_INPUT" = "armv7" ]; then
+          GRADLE_TASK="assembleFenixNightlyArmv7"
         else
-          # بازنویسی کاملاً امن با پرینت خط به خط برای جلوگیری از هرگونه ارور Unexpected end of file
-          {
-            echo "Categories:"
-            echo "  - Internet"
-            echo "License: MPL-2.0"
-            echo "WebSite: https://divestos.org/pages/browsers#mull"
-            echo "SourceCode: https://codeberg.org/divested-mobile/mull-fenix"
-            echo "IssueTracker: https://codeberg.org/divested-mobile/mull-fenix/issues"
-            echo "Changelog: https://codeberg.org/divested-mobile/mull-fenix/releases"
-            echo "AutoName: Mull"
-            echo "Summary: Privacy oriented web browser"
-            echo "Description: |-"
-            echo "    A privacy oriented and deblobbed web browser based on Mozilla technology."
-            echo "    It enables many features upstreamed by the Tor Browser project using preferences from the arkenfox-user.js project."
-            echo "RepoType: git"
-            echo "Repo: https://codeberg.org/divested-mobile/mull-fenix.git"
-            echo "Builds:"
-            echo "  - versionName: '133.0.3'"
-            echo "    versionCode: 1330300200"
-            echo "    commit: v133.0.3"
-            echo "    subdir: android-components"
-            echo "    submodules: true"
-            echo "    gradle:"
-            echo "      - yes"
-            echo "    srclibs:"
-            echo "      - rustup@1.27.1"
-            echo "    prebuild: |"
-            echo "      pushd .."
-            echo "      git submodule update --init --recursive"
-            echo "      popd"
-            echo "    build: |"
-            echo "      export RUST_ANDROID_GRADLE_TARGET_X86_64_LINUX_ANDROID_NDK_ROOT=\"\$ANDROID_NDK\""
-            echo "      export RUST_ANDROID_GRADLE_TARGET_I686_LINUX_ANDROID_NDK_ROOT=\"\$ANDROID_NDK\""
-            echo "      export RUST_ANDROID_GRADLE_TARGET_ARMV7_LINUX_ANDROIDEABI_NDK_ROOT=\"\$ANDROID_NDK\""
-            echo "      export RUST_ANDROID_GRADLE_TARGET_AARCH64_LINUX_ANDROID_NDK_ROOT=\"\$ANDROID_NDK\""
-            echo "      ./srclibs/rustup/rustup-init.sh -y"
-            echo "      source ~/.cargo/env"
-            echo "      rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android"
-            echo "      pushd .."
-            echo "      ./gradlew assembleFenixNightlyArm64 -x lintVitalFenixNightlyRelease"
-            echo "      popd"
-            echo "AutoUpdateMode: None"
-            echo "UpdateCheckMode: None"
-            echo "CurrentVersion: '133.0.3'"
-            echo "CurrentVersionCode: 1330300200"
-          } > metadata/us.spotco.fennec_dos.yml
+          GRADLE_TASK="assembleFenixNightlyX86"
         fi
+        
+        # اصلاح نهایی: تزریق مشخصه ndk به صورت صریح برای برطرف کردن کرش پایتون
+        python3 -c "
+        import yaml
+        data = {
+            'Categories': ['Internet'],
+            'License': 'MPL-2.0',
+            'WebSite': 'https://divestos.org/pages/browsers#mull',
+            'SourceCode': 'https://codeberg.org/divested-mobile/mull-fenix',
+            'IssueTracker': 'https://codeberg.org/divested-mobile/mull-fenix/issues',
+            'Changelog': 'https://codeberg.org/divested-mobile/mull-fenix/releases',
+            'AutoName': 'Mull',
+            'Summary': 'Privacy oriented web browser',
+            'Description': 'A privacy oriented and deblobbed web browser based on Mozilla technology.\nIt enables many features upstreamed by the Tor Browser project.',
+            'RepoType': 'git',
+            'Repo': 'https://codeberg.org/divested-mobile/mull-fenix.git',
+            'Builds': [{
+                'versionName': '133.0.3',
+                'versionCode': 1330300200,
+                'commit': 'v133.0.3',
+                'subdir': 'android-components',
+                'submodules': True,
+                'ndk': 'r25c',
+                'gradle': ['yes'],
+                'srclibs': ['rustup@1.27.1'],
+                'prebuild': 'pushd ..\ngit submodule update --init --recursive\npopd\n',
+                'build': f'export RUST_ANDROID_GRADLE_TARGET_X86_64_LINUX_ANDROID_NDK_ROOT=\"$ANDROID_NDK\"\nexport RUST_ANDROID_GRADLE_TARGET_I686_LINUX_ANDROID_NDK_ROOT=\"$ANDROID_NDK\"\nexport RUST_ANDROID_GRADLE_TARGET_ARMV7_LINUX_ANDROIDEABI_NDK_ROOT=\"$ANDROID_NDK\"\nexport RUST_ANDROID_GRADLE_TARGET_AARCH64_LINUX_ANDROID_NDK_ROOT=\"$ANDROID_NDK\"\n\n../../srclibs/rustup/rustup-init.sh -y\nsource ~/.cargo/env\nrustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android\npushd ..\n./gradlew {GRADLE_TASK} -x lintVitalFenixNightlyRelease\npopd\n'
+            }],
+            'AutoUpdateMode': 'None',
+            'UpdateCheckMode': 'None',
+            'CurrentVersion': '133.0.3',
+            'CurrentVersionCode': 1330300200
+        }
+        with open('metadata/us.spotco.fennec_dos.yml', 'w') as f:
+            yaml.dump(data, f, default_flow_style=False)
+        "
         
         if [ -d "../-fdroiddata/" ]; then
           [ -d "../-fdroiddata/srclibs" ] && cp -r ../-fdroiddata/srclibs . 2>/dev/null || echo "No srclibs found"
