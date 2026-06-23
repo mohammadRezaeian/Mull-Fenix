@@ -150,23 +150,39 @@ jobs:
         fi
 
     - name: Prepare Mull build configuration
+      env:
+        GH_ARCHITECTURE: ${{ github.event.inputs.architecture }}
       run: |
         source fdroid-env/bin/activate
         cd fdroid-build
         mkdir -p metadata
         
-        ARCH_INPUT="${{ github.event.inputs.architecture }}"
-        if [ "$ARCH_INPUT" = "arm64" ]; then
-          GRADLE_TASK="assembleFenixNightlyArm64"
-        elif [ "$ARCH_INPUT" = "armv7" ]; then
-          GRADLE_TASK="assembleFenixNightlyArmv7"
-        else
-          GRADLE_TASK="assembleFenixNightlyX86"
-        fi
-        
-        # اصلاح نهایی: تزریق مشخصه ndk به صورت صریح برای برطرف کردن کرش پایتون
+        # مدیریت کامل آرکیتکچر و ساختار متادیتای یامل در پایتون خالص بدون تداخل با بَش
         python3 -c "
+        import os
         import yaml
+        
+        arch = os.environ.get('GH_ARCHITECTURE', 'arm64')
+        if arch == 'arm64':
+            gradle_task = 'assembleFenixNightlyArm64'
+        elif arch == 'armv7':
+            gradle_task = 'assembleFenixNightlyArmv7'
+        else:
+            gradle_task = 'assembleFenixNightlyX86'
+            
+        build_command = (
+            'export RUST_ANDROID_GRADLE_TARGET_X86_64_LINUX_ANDROID_NDK_ROOT=\"$ANDROID_NDK\"\n'
+            'export RUST_ANDROID_GRADLE_TARGET_I686_LINUX_ANDROID_NDK_ROOT=\"$ANDROID_NDK\"\n'
+            'export RUST_ANDROID_GRADLE_TARGET_ARMV7_LINUX_ANDROIDEABI_NDK_ROOT=\"$ANDROID_NDK\"\n'
+            'export RUST_ANDROID_GRADLE_TARGET_AARCH64_LINUX_ANDROID_NDK_ROOT=\"$ANDROID_NDK\"\n\n'
+            '../../srclibs/rustup/rustup-init.sh -y\n'
+            'source ~/.cargo/env\n'
+            'rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android\n'
+            'pushd ..\n'
+            f'./gradlew {gradle_task} -x lintVitalFenixNightlyRelease\n'
+            'popd\n'
+        )
+        
         data = {
             'Categories': ['Internet'],
             'License': 'MPL-2.0',
@@ -189,13 +205,14 @@ jobs:
                 'gradle': ['yes'],
                 'srclibs': ['rustup@1.27.1'],
                 'prebuild': 'pushd ..\ngit submodule update --init --recursive\npopd\n',
-                'build': f'export RUST_ANDROID_GRADLE_TARGET_X86_64_LINUX_ANDROID_NDK_ROOT=\"$ANDROID_NDK\"\nexport RUST_ANDROID_GRADLE_TARGET_I686_LINUX_ANDROID_NDK_ROOT=\"$ANDROID_NDK\"\nexport RUST_ANDROID_GRADLE_TARGET_ARMV7_LINUX_ANDROIDEABI_NDK_ROOT=\"$ANDROID_NDK\"\nexport RUST_ANDROID_GRADLE_TARGET_AARCH64_LINUX_ANDROID_NDK_ROOT=\"$ANDROID_NDK\"\n\n../../srclibs/rustup/rustup-init.sh -y\nsource ~/.cargo/env\nrustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android\npushd ..\n./gradlew {GRADLE_TASK} -x lintVitalFenixNightlyRelease\npopd\n'
+                'build': build_command
             }],
             'AutoUpdateMode': 'None',
             'UpdateCheckMode': 'None',
             'CurrentVersion': '133.0.3',
             'CurrentVersionCode': 1330300200
         }
+        
         with open('metadata/us.spotco.fennec_dos.yml', 'w') as f:
             yaml.dump(data, f, default_flow_style=False)
         "
