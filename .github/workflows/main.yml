@@ -135,7 +135,12 @@ jobs:
         done
         
         if [ -z "$CONFIG_FILE" ]; then
-          echo "version_to_build=1330300200" >> $GITHUB_OUTPUT
+          # اگر فایلی پیدا نشد، بررسی می‌کنیم کاربر چه چیزی ورودی داده است
+          if [ "${{ github.event.inputs.version_code }}" = "auto" ]; then
+            echo "version_to_build=1330300200" >> $GITHUB_OUTPUT
+          else
+            echo "version_to_build=${{ github.event.inputs.version_code }}" >> $GITHUB_OUTPUT
+          fi
           echo "official_version=133.0.3" >> $GITHUB_OUTPUT
         else
           CURRENT_VERSION=$(grep "CurrentVersion:" "$CONFIG_FILE" | cut -d"'" -f2 2>/dev/null || echo "133.0.3")
@@ -152,17 +157,22 @@ jobs:
     - name: Prepare Mull build configuration
       env:
         GH_ARCHITECTURE: ${{ github.event.inputs.architecture }}
+        VERSION_TO_BUILD: ${{ steps.version_info.outputs.version_to_build }}
+        OFFICIAL_VERSION: ${{ steps.version_info.outputs.official_version }}
       run: |
         source fdroid-env/bin/activate
         cd fdroid-build
         mkdir -p metadata
         
-        # مدیریت کامل آرکیتکچر و ساختار متادیتای یامل در پایتون خالص بدون تداخل با بَش
+        # هماهنگ‌سازی پویا: تزریق دقیق کد نسخه‌ای که گام قبل شناسایی کرد به ساختار یامل پایتون
         python3 -c "
         import os
         import yaml
         
         arch = os.environ.get('GH_ARCHITECTURE', 'arm64')
+        v_code = int(os.environ.get('VERSION_TO_BUILD', '1330300200'))
+        v_name = os.environ.get('OFFICIAL_VERSION', '133.0.3')
+        
         if arch == 'arm64':
             gradle_task = 'assembleFenixNightlyArm64'
         elif arch == 'armv7':
@@ -196,9 +206,9 @@ jobs:
             'RepoType': 'git',
             'Repo': 'https://codeberg.org/divested-mobile/mull-fenix.git',
             'Builds': [{
-                'versionName': '133.0.3',
-                'versionCode': 1330300200,
-                'commit': 'v133.0.3',
+                'versionName': v_name,
+                'versionCode': v_code,
+                'commit': f'v{v_name}',
                 'subdir': 'android-components',
                 'submodules': True,
                 'ndk': 'r25c',
@@ -209,8 +219,8 @@ jobs:
             }],
             'AutoUpdateMode': 'None',
             'UpdateCheckMode': 'None',
-            'CurrentVersion': '133.0.3',
-            'CurrentVersionCode': 1330300200
+            'CurrentVersion': v_name,
+            'CurrentVersionCode': v_code
         }
         
         with open('metadata/us.spotco.fennec_dos.yml', 'w') as f:
