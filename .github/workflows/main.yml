@@ -116,17 +116,16 @@ jobs:
         
         mkdir -p metadata
         
-        cat > config.yml << 'EOF'
-        sdk_path: /opt/android-sdk
-        ndk_paths:
-          r25c: /opt/android-sdk/ndk
-        build_tools: 33.0.2
-        keystore: debug.keystore
-        repo_keyalias: sova
-        keypass: android
-        keystorepass: android
-        keydname: CN=Birdman, OU=Cell, O=Alcatraz, L=Alcatraz, S=California, C=US
-        EOF
+        # استفاده از بلاک خط فرمان مستقیم لینوکس بدون نیاز به EOF تداخلی
+        echo "sdk_path: /opt/android-sdk" > config.yml
+        echo "ndk_paths:" >> config.yml
+        echo "  r25c: /opt/android-sdk/ndk" >> config.yml
+        echo "build_tools: 33.0.2" >> config.yml
+        echo "keystore: debug.keystore" >> config.yml
+        echo "repo_keyalias: sova" >> config.yml
+        echo "keypass: android" >> config.yml
+        echo "keystorepass: android" >> config.yml
+        echo "keydname: CN=Birdman, OU=Cell, O=Alcatraz, L=Alcatraz, S=California, C=US" >> config.yml
 
     - name: Get version information from config
       id: version_info
@@ -171,51 +170,52 @@ jobs:
         if [ -n "$CONFIG_SOURCE" ]; then
           cp "$CONFIG_SOURCE" metadata/us.spotco.fennec_dos.yml
         else
-          cat > metadata/us.spotco.fennec_dos.yml << 'EOF'
-          Categories:
-            - Internet
-          License: MPL-2.0
-          WebSite: https://divestos.org/pages/browsers#mull
-          SourceCode: https://codeberg.org/divested-mobile/mull-fenix
-          IssueTracker: https://codeberg.org/divested-mobile/mull-fenix/issues
-          Changelog: https://codeberg.org/divested-mobile/mull-fenix/releases
-          AutoName: Mull
-          Summary: Privacy oriented web browser
-          Description: |-
-              A privacy oriented and deblobbed web browser based on Mozilla technology.
-              It enables many features upstreamed by the Tor Browser project using preferences from the arkenfox-user.js project.
-          RepoType: git
-          Repo: https://codeberg.org/divested-mobile/mull-fenix.git
-          Builds:
-            - versionName: '133.0.3'
-              versionCode: 1330300200
-              commit: v133.0.3
-              subdir: android-components
-              submodules: true
-              gradle:
-                - yes
-              srclibs:
-                - rustup@1.27.1
-              prebuild: |
-                pushd ..
-                git submodule update --init --recursive
-                popd
-              build: |
-                export RUST_ANDROID_GRADLE_TARGET_X86_64_LINUX_ANDROID_NDK_ROOT="$ANDROID_NDK"
-                export RUST_ANDROID_GRADLE_TARGET_I686_LINUX_ANDROID_NDK_ROOT="$ANDROID_NDK"
-                export RUST_ANDROID_GRADLE_TARGET_ARMV7_LINUX_ANDROIDEABI_NDK_ROOT="$ANDROID_NDK"
-                export RUST_ANDROID_GRADLE_TARGET_AARCH64_LINUX_ANDROID_NDK_ROOT="$ANDROID_NDK"
-                ./srclibs/rustup/rustup-init.sh -y
-                source ~/.cargo/env
-                rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android
-                pushd ..
-                ./gradlew assembleFenixNightlyArm64 -x lintVitalFenixNightlyRelease
-                popd
-          AutoUpdateMode: None
-          UpdateCheckMode: None
-          CurrentVersion: '133.0.3'
-          CurrentVersionCode: 1330300200
-          EOF
+          # بازنویسی کاملاً امن با پرینت خط به خط برای جلوگیری از هرگونه ارور Unexpected end of file
+          {
+            echo "Categories:"
+            echo "  - Internet"
+            echo "License: MPL-2.0"
+            echo "WebSite: https://divestos.org/pages/browsers#mull"
+            echo "SourceCode: https://codeberg.org/divested-mobile/mull-fenix"
+            echo "IssueTracker: https://codeberg.org/divested-mobile/mull-fenix/issues"
+            echo "Changelog: https://codeberg.org/divested-mobile/mull-fenix/releases"
+            echo "AutoName: Mull"
+            echo "Summary: Privacy oriented web browser"
+            echo "Description: |-"
+            echo "    A privacy oriented and deblobbed web browser based on Mozilla technology."
+            echo "    It enables many features upstreamed by the Tor Browser project using preferences from the arkenfox-user.js project."
+            echo "RepoType: git"
+            echo "Repo: https://codeberg.org/divested-mobile/mull-fenix.git"
+            echo "Builds:"
+            echo "  - versionName: '133.0.3'"
+            echo "    versionCode: 1330300200"
+            echo "    commit: v133.0.3"
+            echo "    subdir: android-components"
+            echo "    submodules: true"
+            echo "    gradle:"
+            echo "      - yes"
+            echo "    srclibs:"
+            echo "      - rustup@1.27.1"
+            echo "    prebuild: |"
+            echo "      pushd .."
+            echo "      git submodule update --init --recursive"
+            echo "      popd"
+            echo "    build: |"
+            echo "      export RUST_ANDROID_GRADLE_TARGET_X86_64_LINUX_ANDROID_NDK_ROOT=\"\$ANDROID_NDK\""
+            echo "      export RUST_ANDROID_GRADLE_TARGET_I686_LINUX_ANDROID_NDK_ROOT=\"\$ANDROID_NDK\""
+            echo "      export RUST_ANDROID_GRADLE_TARGET_ARMV7_LINUX_ANDROIDEABI_NDK_ROOT=\"\$ANDROID_NDK\""
+            echo "      export RUST_ANDROID_GRADLE_TARGET_AARCH64_LINUX_ANDROID_NDK_ROOT=\"\$ANDROID_NDK\""
+            echo "      ./srclibs/rustup/rustup-init.sh -y"
+            echo "      source ~/.cargo/env"
+            echo "      rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android"
+            echo "      pushd .."
+            echo "      ./gradlew assembleFenixNightlyArm64 -x lintVitalFenixNightlyRelease"
+            echo "      popd"
+            echo "AutoUpdateMode: None"
+            echo "UpdateCheckMode: None"
+            echo "CurrentVersion: '133.0.3'"
+            echo "CurrentVersionCode: 1330300200"
+          } > metadata/us.spotco.fennec_dos.yml
         fi
         
         if [ -d "../-fdroiddata/" ]; then
