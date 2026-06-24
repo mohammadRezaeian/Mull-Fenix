@@ -36,8 +36,6 @@ jobs:
 
     - name: Checkout Mull-Fenix
       uses: actions/checkout@v4
-      with:
-        fetch-depth: 0 # دریافت تاریخچه کامل کامیت‌ها برای جلوگیری از ارورهای گیت فدروید
 
     - name: Setup build environment
       run: |
@@ -107,9 +105,8 @@ jobs:
       run: |
         source fdroid-env/bin/activate
         
-        # ساخت یک پوشه مجزا برای محیط کاری فدروید
-        mkdir -p fdroid-workspace
-        cd fdroid-build 2>/dev/null || mkdir -p fdroid-build
+        rm -rf fdroid-build
+        mkdir -p fdroid-build
         cd fdroid-build
         
         echo "=== Initializing fdroid repository ==="
@@ -205,18 +202,17 @@ jobs:
             'AutoName': 'Mull',
             'Summary': 'Privacy oriented web browser',
             'Description': 'A privacy oriented and deblobbed web browser based on Mozilla technology.\nIt enables many features upstreamed by the Tor Browser project.',
-            'RepoType': 'git',
-            'Repo': 'https://codeberg.org/divested-mobile/mull-fenix.git',
+            'RepoType': 'local', # سوئیچ به حالت لوکال خالص برای حذف کامل خطاهای متادیتای گیت سرور
+            'Repo': '/home/runner/work/Mull-Fenix/Mull-Fenix/fdroid-build/build/us.spotco.fennec_dos',
             'Builds': [{
                 'versionName': v_name,
                 'versionCode': v_code,
-                'commit': f'v{v_name}',
+                'commit': '1.0',
                 'subdir': 'android-components',
                 'submodules': True,
                 'ndk': 'r25c',
                 'gradle': ['yes'],
                 'srclibs': ['rustup@1.27.1'],
-                'prebuild': 'pushd ..\ngit submodule update --init --recursive\npopd\n',
                 'build': build_command
             }],
             'AutoUpdateMode': 'None',
@@ -237,14 +233,17 @@ jobs:
       run: |
         source fdroid-env/bin/activate
         
-        # انتقال هوشمندانه کدهای واقعی دانلود شده ریپازیتوری شما به دایرکتوری مورد انتظار فدروید بیلد
+        # کلون کدهای دانلود شده گیت‌هاب اکشنز درون مسیر بیلد محلی فدروید
         mkdir -p fdroid-build/build/us.spotco.fennec_dos
         rsync -a --exclude='fdroid-env' --exclude='fdroid-build' ./ fdroid-build/build/us.spotco.fennec_dos/
         
         cd fdroid-build
         set -x
         
-        # با اجرای مستقیم این دستور با فلگ --build-local روی کدهای واقعی شما، فدروید دیگر کرش نکرده و مستقیما وارد کامپایل با گریدل می‌شود.
+        # هاردکد کردن مقدار ثابت متنی برای جلوگیری از ارور تایپ فدروید
+        export SOURCE_DATE_EPOCH="1782285132"
+        
+        # اجرای بیلد محلی بدون باگ زنجیره‌ای گیت
         fdroid build -v --build-local --skip-scan -l us.spotco.fennec_dos:${{ steps.version_info.outputs.version_to_build }}
         BUILD_RESULT=$?
         set +x
@@ -291,7 +290,7 @@ jobs:
         
         zipalign -v 4 "$APK_NAME" "${APK_NAME%.apk}-aligned.apk"
         
-        jarsigner -verbose -sigalg SHA256withRSA -digestalg SHA-256 \
+        jarsigner -verbose -sigalg SHA256withRSA -digestalg SHA-2-56 \
           -keystore keystore/keystore.jks \
           -storepass "${{ secrets.KEYSTORE_PASSWORD }}" \
           -keypass "${{ secrets.KEY_PASSWORD }}" \
