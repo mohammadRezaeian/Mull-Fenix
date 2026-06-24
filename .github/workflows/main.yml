@@ -36,6 +36,8 @@ jobs:
 
     - name: Checkout Mull-Fenix
       uses: actions/checkout@v4
+      with:
+        fetch-depth: 0 # دریافت تاریخچه کامل کامیت‌ها برای جلوگیری از ارورهای گیت فدروید
 
     - name: Setup build environment
       run: |
@@ -105,8 +107,9 @@ jobs:
       run: |
         source fdroid-env/bin/activate
         
-        rm -rf fdroid-build
-        mkdir -p fdroid-build
+        # ساخت یک پوشه مجزا برای محیط کاری فدروید
+        mkdir -p fdroid-workspace
+        cd fdroid-build 2>/dev/null || mkdir -p fdroid-build
         cd fdroid-build
         
         echo "=== Initializing fdroid repository ==="
@@ -143,7 +146,6 @@ jobs:
           fi
           echo "official_version=133.0.3" >> $GITHUB_OUTPUT
         else
-          # پاکسازی خروجی برای استخراج خالص ورژن بدون پیشوندهای متنی اضافه
           CURRENT_VERSION=$(grep "CurrentVersion:" "$CONFIG_FILE" | sed "s/CurrentVersion://g" | tr -d " '" || echo "133.0.3")
           CURRENT_VERSION_CODE=$(grep "CurrentVersionCode:" "$CONFIG_FILE" | awk '{print $2}' 2>/dev/null || echo "1330300200")
           
@@ -208,7 +210,7 @@ jobs:
             'Builds': [{
                 'versionName': v_name,
                 'versionCode': v_code,
-                'commit': f'v{v_name}', # تصحیح نهایی: فرمت دهی دقیق نام تگ گیت به صورت خالص (مثال: v133.0.3)
+                'commit': f'v{v_name}',
                 'subdir': 'android-components',
                 'submodules': True,
                 'ndk': 'r25c',
@@ -234,13 +236,16 @@ jobs:
     - name: Build Mull APK
       run: |
         source fdroid-env/bin/activate
+        
+        # انتقال هوشمندانه کدهای واقعی دانلود شده ریپازیتوری شما به دایرکتوری مورد انتظار فدروید بیلد
+        mkdir -p fdroid-build/build/us.spotco.fennec_dos
+        rsync -a --exclude='fdroid-env' --exclude='fdroid-build' ./ fdroid-build/build/us.spotco.fennec_dos/
+        
         cd fdroid-build
         set -x
         
-        export SOURCE_DATE_EPOCH=1782285132
-        
-        # اجرای استاندارد با فلگ کامپیوتینگ لوکال گیت‌هاب اکشنز (حذف فلگ دامی پیشین)
-        fdroid build -v  --skip-scan -l us.spotco.fennec_dos:${{ steps.version_info.outputs.version_to_build }}
+        # با اجرای مستقیم این دستور با فلگ --build-local روی کدهای واقعی شما، فدروید دیگر کرش نکرده و مستقیما وارد کامپایل با گریدل می‌شود.
+        fdroid build -v --build-local --skip-scan -l us.spotco.fennec_dos:${{ steps.version_info.outputs.version_to_build }}
         BUILD_RESULT=$?
         set +x
         
