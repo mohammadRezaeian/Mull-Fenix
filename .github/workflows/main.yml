@@ -94,6 +94,11 @@ jobs:
         source fdroid-env/bin/activate
         pip install fdroidserver
         fdroid --version
+        
+        # پچ کردن باگ fdroidserver برای جلوگیری از ارور TypeError: str expected, not NoneType
+        echo "Patching fdroidserver bugs..."
+        COMMON_PY=$(find fdroid-env -name common.py | grep fdroidserver | head -n 1)
+        sed -i 's/env\[.SOURCE_DATE_EPOCH.\] = get_source_date_epoch(get_build_dir(app))/env["SOURCE_DATE_EPOCH"] = "1782285132"/g' "$COMMON_PY"
 
     - name: Set up Java 17
       uses: actions/setup-java@v4
@@ -202,12 +207,12 @@ jobs:
             'AutoName': 'Mull',
             'Summary': 'Privacy oriented web browser',
             'Description': 'A privacy oriented and deblobbed web browser based on Mozilla technology.\nIt enables many features upstreamed by the Tor Browser project.',
-            'RepoType': 'local', # سوئیچ به حالت لوکال خالص برای حذف کامل خطاهای متادیتای گیت سرور
-            'Repo': '/home/runner/work/Mull-Fenix/Mull-Fenix/fdroid-build/build/us.spotco.fennec_dos',
+            'RepoType': 'git',
+            'Repo': 'https://codeberg.org/divested-mobile/mull-fenix.git',
             'Builds': [{
                 'versionName': v_name,
                 'versionCode': v_code,
-                'commit': '1.0',
+                'commit': f'v{v_name}',
                 'subdir': 'android-components',
                 'submodules': True,
                 'ndk': 'r25c',
@@ -240,11 +245,8 @@ jobs:
         cd fdroid-build
         set -x
         
-        # هاردکد کردن مقدار ثابت متنی برای جلوگیری از ارور تایپ فدروید
-        export SOURCE_DATE_EPOCH="1782285132"
-        
-        # اجرای بیلد محلی بدون باگ زنجیره‌ای گیت
-        fdroid build -v --build-local --skip-scan -l us.spotco.fennec_dos:${{ steps.version_info.outputs.version_to_build }}
+        # اجرای بیلد محلی بدون باگ زنجیره‌ای گیت و رفع ارور تایپ NoneType
+        fdroid build -v --local --skip-scan us.spotco.fennec_dos:${{ steps.version_info.outputs.version_to_build }}
         BUILD_RESULT=$?
         set +x
         
