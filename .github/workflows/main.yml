@@ -236,7 +236,7 @@ jobs:
         cd fdroid-build
         set -x
         
-        # رفع ارور هویت گیت: معرفی مشخصات فرضی برای تایید امضای کامیت محلی
+        # معرفی مشخصات کاربری گیت جهت تایید کامیت محلی ساختگی
         git config --global user.email "runner@github.actions"
         git config --global user.name "Runner Bot"
         
@@ -245,8 +245,8 @@ jobs:
         
         export SOURCE_DATE_EPOCH=1782285132
         
-        # اصلاح نهایی: استفاده از فلگ استاندارد --offline به جای --no-sync منسوخ شده
-        fdroid build -v --offline --skip-scan -l us.spotco.fennec_dos:${{ steps.version_info.outputs.version_to_build }}
+        # استفاده از سوییچ رسمی و استاندارد --build-local برای اجرای لوکال شبیه به پودمن شما
+        fdroid build -v --build-local --skip-scan -l us.spotco.fennec_dos:${{ steps.version_info.outputs.version_to_build }}
         BUILD_RESULT=$?
         set +x
         
