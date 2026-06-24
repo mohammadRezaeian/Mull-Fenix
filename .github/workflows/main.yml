@@ -135,7 +135,6 @@ jobs:
         done
         
         if [ -z "$CONFIG_FILE" ]; then
-          # اگر فایلی پیدا نشد، بررسی می‌کنیم کاربر چه چیزی ورودی داده است
           if [ "${{ github.event.inputs.version_code }}" = "auto" ]; then
             echo "version_to_build=1330300200" >> $GITHUB_OUTPUT
           else
@@ -164,7 +163,6 @@ jobs:
         cd fdroid-build
         mkdir -p metadata
         
-        # هماهنگ‌سازی پویا: تزریق دقیق کد نسخه‌ای که گام قبل شناسایی کرد به ساختار یامل پایتون
         python3 -c "
         import os
         import yaml
@@ -236,6 +234,10 @@ jobs:
         source fdroid-env/bin/activate
         cd fdroid-build
         set -x
+        
+        # تزریق اجباری متغیر مانیتورینگ گیت پایتون برای جلوگیری از کرش کدهای داخلی فدرویدسرور
+        export SOURCE_DATE_EPOCH=$(date +%s)
+        
         fdroid build -v -l us.spotco.fennec_dos:${{ steps.version_info.outputs.version_to_build }}
         BUILD_RESULT=$?
         set +x
