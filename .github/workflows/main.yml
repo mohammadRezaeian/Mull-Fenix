@@ -205,13 +205,13 @@ jobs:
             'Summary': 'Privacy oriented web browser',
             'Description': 'A privacy oriented and deblobbed web browser based on Mozilla technology.\nIt enables many features upstreamed by the Tor Browser project.',
             'RepoType': 'git',
-            'Repo': '/home/runner/work/Mull-Fenix/Mull-Fenix', # کپی مستقیم از دایرکتوری لوکال به جای دانلود مجدد
+            'Repo': '/home/runner/work/Mull-Fenix/Mull-Fenix', 
             'Builds': [{
                 'versionName': v_name,
                 'versionCode': v_code,
-                'commit': github_sha, # استفاده از شناسه کامیتِ فعلی (جلوگیری از ارور پیدا نشدن تگ)
+                'commit': github_sha,
                 'subdir': 'android-components',
-                'submodules': True,
+                'submodules': False, # <--- خط رفع ارور
                 'ndk': 'r25c',
                 'gradle': ['yes'],
                 'srclibs': ['rustup@1.27.1'],
