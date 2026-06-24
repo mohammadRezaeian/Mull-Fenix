@@ -143,7 +143,8 @@ jobs:
           fi
           echo "official_version=133.0.3" >> $GITHUB_OUTPUT
         else
-          CURRENT_VERSION=$(grep "CurrentVersion:" "$CONFIG_FILE" | cut -d"'" -f2 2>/dev/null || echo "133.0.3")
+          # پاکسازی خروجی برای استخراج خالص ورژن بدون پیشوندهای متنی اضافه
+          CURRENT_VERSION=$(grep "CurrentVersion:" "$CONFIG_FILE" | sed "s/CurrentVersion://g" | tr -d " '" || echo "133.0.3")
           CURRENT_VERSION_CODE=$(grep "CurrentVersionCode:" "$CONFIG_FILE" | awk '{print $2}' 2>/dev/null || echo "1330300200")
           
           if [ "${{ github.event.inputs.version_code }}" = "auto" ]; then
@@ -207,7 +208,7 @@ jobs:
             'Builds': [{
                 'versionName': v_name,
                 'versionCode': v_code,
-                'commit': f'v{v_name}',
+                'commit': f'v{v_name}', # تصحیح نهایی: فرمت دهی دقیق نام تگ گیت به صورت خالص (مثال: v133.0.3)
                 'subdir': 'android-components',
                 'submodules': True,
                 'ndk': 'r25c',
@@ -236,16 +237,9 @@ jobs:
         cd fdroid-build
         set -x
         
-        # معرفی مشخصات کاربری گیت جهت تایید کامیت محلی ساختگی
-        git config --global user.email "runner@github.actions"
-        git config --global user.name "Runner Bot"
-        
-        mkdir -p build/us.spotco.fennec_dos
-        cd build/us.spotco.fennec_dos && git init && touch dummy && git add dummy && git commit -m "dummy" && cd ../..
-        
         export SOURCE_DATE_EPOCH=1782285132
         
-        # استفاده از سوییچ رسمی و استاندارد --build-local برای اجرای لوکال شبیه به پودمن شما
+        # اجرای استاندارد با فلگ کامپیوتینگ لوکال گیت‌هاب اکشنز (حذف فلگ دامی پیشین)
         fdroid build -v  --skip-scan -l us.spotco.fennec_dos:${{ steps.version_info.outputs.version_to_build }}
         BUILD_RESULT=$?
         set +x
