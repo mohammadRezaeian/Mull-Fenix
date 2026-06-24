@@ -28,6 +28,7 @@ jobs:
       run: |
         sudo rm -rf /usr/share/dotnet
         sudo rm -rf /usr/local/lib/android
+        sudo rm -rf /usr/local/share/powershell
         sudo rm -rf /opt/ghc
         sudo rm -rf /opt/hostedtoolcache/CodeQL
         sudo docker image prune --all --force
@@ -235,14 +236,17 @@ jobs:
         cd fdroid-build
         set -x
         
-        # تضمین وجود مسیر فرعی شبیه‌سازی گیت محلی پروژه
+        # رفع ارور هویت گیت: معرفی مشخصات فرضی برای تایید امضای کامیت محلی
+        git config --global user.email "runner@github.actions"
+        git config --global user.name "Runner Bot"
+        
         mkdir -p build/us.spotco.fennec_dos
         cd build/us.spotco.fennec_dos && git init && touch dummy && git add dummy && git commit -m "dummy" && cd ../..
         
         export SOURCE_DATE_EPOCH=1782285132
         
-        # دور زدن کرش کامیت‌های گیت در محیط CI با اضافه کردن فلگ‌ها
-        fdroid build -v --no-sync --skip-scan -l us.spotco.fennec_dos:${{ steps.version_info.outputs.version_to_build }}
+        # اصلاح نهایی: استفاده از فلگ استاندارد --offline به جای --no-sync منسوخ شده
+        fdroid build -v --offline --skip-scan -l us.spotco.fennec_dos:${{ steps.version_info.outputs.version_to_build }}
         BUILD_RESULT=$?
         set +x
         
