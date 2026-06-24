@@ -159,6 +159,7 @@ jobs:
         GH_ARCHITECTURE: ${{ github.event.inputs.architecture }}
         VERSION_TO_BUILD: ${{ steps.version_info.outputs.version_to_build }}
         OFFICIAL_VERSION: ${{ steps.version_info.outputs.official_version }}
+        GITHUB_SHA: ${{ github.sha }}
       run: |
         source fdroid-env/bin/activate
         cd fdroid-build
@@ -171,6 +172,7 @@ jobs:
         arch = os.environ.get('GH_ARCHITECTURE', 'arm64')
         v_code = int(os.environ.get('VERSION_TO_BUILD', '1330300200'))
         v_name = os.environ.get('OFFICIAL_VERSION', '133.0.3')
+        github_sha = os.environ.get('GITHUB_SHA', 'HEAD')
         
         if arch == 'arm64':
             gradle_task = 'assembleFenixNightlyArm64'
@@ -203,11 +205,11 @@ jobs:
             'Summary': 'Privacy oriented web browser',
             'Description': 'A privacy oriented and deblobbed web browser based on Mozilla technology.\nIt enables many features upstreamed by the Tor Browser project.',
             'RepoType': 'git',
-            'Repo': 'https://codeberg.org/divested-mobile/mull-fenix.git',
+            'Repo': '/home/runner/work/Mull-Fenix/Mull-Fenix', # کپی مستقیم از دایرکتوری لوکال به جای دانلود مجدد
             'Builds': [{
                 'versionName': v_name,
                 'versionCode': v_code,
-                'commit': f'v{v_name}',
+                'commit': github_sha, # استفاده از شناسه کامیتِ فعلی (جلوگیری از ارور پیدا نشدن تگ)
                 'subdir': 'android-components',
                 'submodules': True,
                 'ndk': 'r25c',
@@ -234,22 +236,16 @@ jobs:
       run: |
         source fdroid-env/bin/activate
         
-        # ========================================================
-        # 🔴 PATCH FDROIDSERVER BUG: FIX TypeError NoneType 🔴
-        # ========================================================
+        # پچ کردن مشکل متغیر پایتون فدروید
         echo "Patching fdroidserver common.py to fix SOURCE_DATE_EPOCH bug..."
         COMMON_PY=$(find fdroid-env/lib/ -name common.py | grep fdroidserver | head -n 1)
         sed -i 's/get_source_date_epoch(get_build_dir(app))/"1782285132"/g' "$COMMON_PY"
         echo "Patch applied successfully!"
         
-        # کلون کدهای دانلود شده گیت‌هاب اکشنز درون مسیر بیلد محلی فدروید
-        mkdir -p fdroid-build/build/us.spotco.fennec_dos
-        rsync -a --exclude='fdroid-env' --exclude='fdroid-build' ./ fdroid-build/build/us.spotco.fennec_dos/
-        
         cd fdroid-build
         set -x
         
-        # اجرای بیلد محلی
+        # اجرای بیلد بدون هیچ فلگ نامعتبر و با اتکا به کدهای کپی شده
         fdroid build -v --skip-scan us.spotco.fennec_dos:${{ steps.version_info.outputs.version_to_build }}
         BUILD_RESULT=$?
         set +x
