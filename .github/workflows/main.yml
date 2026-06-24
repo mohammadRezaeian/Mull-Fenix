@@ -250,7 +250,7 @@ jobs:
         set -x
         
         # اجرای بیلد محلی
-        fdroid build -v --local --skip-scan us.spotco.fennec_dos:${{ steps.version_info.outputs.version_to_build }}
+        fdroid build -v --skip-scan us.spotco.fennec_dos:${{ steps.version_info.outputs.version_to_build }}
         BUILD_RESULT=$?
         set +x
         
